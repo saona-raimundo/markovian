@@ -3,7 +3,20 @@ name = "markovian"
 version = "0.1.0"
 authors = ["Raimundo Saona <rasa200@gmail.com>"]
 edition = "2018"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/rasa200/markovian"
+# documentation = "https://rust-random.github.io/rand/"
+# homepage = "https://crates.io/crates/rand"
+description = """
+Simulation of Markov Processes as stochastic processes.
+"""
+keywords = ["chain", "markov", "probability", "random"]
+categories = ["Science", "Mathematics", "algorithms"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rand = "0.7.3"
+rand_distr = "0.2.2"
+num-traits = "0.2.11"
