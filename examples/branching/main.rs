@@ -1,8 +1,8 @@
 //! Branching process example
 
 use ndarray::Array1;
-use numerical_algorithms::markov_chain::traits::BranchingTrait;
-use numerical_algorithms::markov_chain::Branching;
+use markovian::traits::BranchingTrait;
+use markovian::Branching;
 use preexplorer::prelude::*;
 use rayon::prelude::*;
 
