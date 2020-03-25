@@ -1,4 +1,4 @@
-//!
+//! Simulation of sub-stochastic Markov processes in discrete and continuous time.  
 //! 
 //!
 
