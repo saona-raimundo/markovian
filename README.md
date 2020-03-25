@@ -1,9 +1,17 @@
 # markovian
 Simulation of Markov Processes as stochastic processes.
 
-# Features
+# Main features
 
 - 
+
+# Changelog
+
+Last version:
+
+- 
+
+For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Changelog.md).
 
 # To do list
 
