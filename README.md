@@ -3,7 +3,10 @@ Simulation of Markov Processes as stochastic processes.
 
 # Main features
 
-- 
+- Easy construction of Markov processes, including:
+  - Discrete time
+  - Continuous time (exponential times)
+- Type agnostic
 
 # Changelog
 
