@@ -4,7 +4,7 @@
 //!
 //! To define a continuous space process, you will need to make the 
 //! transition function random. Otherwise, the state space is at most 
-//! countable, for each initial condition. 
+//! countable, for each initial condition. See crate documentation for more. 
 
 pub use branching::*;
 
@@ -101,7 +101,7 @@ where
     type Item = T;
 
     /// Changes the state of the MarkovChain to a new state, chosen 
-    /// according to the transition of the chain, and returns the new state. 
+    /// according to the transition of the chain. 
     /// 
     /// # Examples
     /// 
