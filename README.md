@@ -20,7 +20,9 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 
 # To do list
 
+- [ ] Document assumptions to create a process (probability distribution input)
 - [ ] Tests
+- [ ] Add pictures (examples and README)
 
 # Roadmap
 
@@ -91,6 +93,21 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 - rand_distr
 - probability
 
-## Contribution
+## Enlarge traits
+
+**Goal:** Give more blank implementations and facilitate the implementation of Iterator trait. In particular, the following methods:
+
+- transition(&self) -> &I
+- can_move_to(&self, state: T) -> bool
+- rate_to(&self, state: T) -> Option<f64>
+  CMarkovChainTrait only
+- probability_to(&self, state: T) -> Option<f64>
+  MarkovChainTrait only
+
+**Current implementation:** None
+
+**Options:** 
+
+# Contribution
 
 Your contribution is highly appreciated. Do not hesitate to open an issue or a pull request. Note that any contribution submitted for inclusion in the project will be licensed according to the terms of the dual license (MIT and Apache-2.0).
