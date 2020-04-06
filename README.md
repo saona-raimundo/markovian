@@ -12,9 +12,9 @@ Simulation of Markov Processes as stochastic processes.
 
 Last version:
 
-- 0.1.2
-  - Documentation added.
-  - Fixed bug in method markovian::traits::BranchingTrait::approx_generating_fun.
+- 0.1.3
+  - Documentation added
+  - Re-export traits module to crate level
 
 For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Changelog.md).
 
