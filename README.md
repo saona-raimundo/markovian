@@ -22,7 +22,6 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 
 - [ ] Document assumptions to create a process (probability distribution input)
 - [ ] Tests
-- [ ] Add pictures (examples and README)
 
 # Roadmap
 

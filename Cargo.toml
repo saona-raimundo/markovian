@@ -1,13 +1,13 @@
 [package]
 name = "markovian"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Raimundo Saona <rasa200@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/rasa200/markovian"
-# documentation = "https://rust-random.github.io/rand/"
-# homepage = "https://crates.io/crates/rand"
+documentation = "https://docs.rs/markovian"
+homepage = "https://crates.io/crates/markovian"
 description = """
 Simulation of Markov Processes as stochastic processes.
 """
@@ -15,6 +15,9 @@ keywords = ["chain", "markov", "probability", "random", "numerics"]
 categories = ["science", "mathematics", "simulation"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[badges]
+maintenance = { status = "actively-developed" }
 
 [dependencies]
 rand = "0.7.3"
