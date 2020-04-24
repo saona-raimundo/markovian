@@ -20,10 +20,30 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 
 # To do list
 
+- [ ] Add `#[inline]` for pub methods as done in the `rand` crate. 
 - [ ] Document assumptions to create a process (probability distribution input)
+- [ ] Add `extern crate crate_name;` in examples for explicit dependences. 
 - [ ] Tests
+- [ ] Add links in documentation to easy access of (from lib level documentation)
+  - [ ] MarkovChain
+  - [ ] CMarkovChain
+  - [ ] Branching
 
 # Roadmap
+
+## Change design
+
+**Goal:** Use a more robust design for the creation of random iterators. One that uses extensively the `rand` and `rand_distr` crate.
+
+**Current implementation:** Initial state and transitions are states and functions that give another iterator.
+
+**Options:**
+
+- Ask for `Distribution` trait in both initial state and transition function. 
+  - Need to save a `Next_state` variable type to sample the next step without the need of a new allocation.
+  - Variables that yield `None`would solve the problem of sub-stochastic random iterators. 
+  - Continuous time Markov Chains are more complicated to construct
+  - Will need helper macros for ease of construction. 
 
 ## Separate sub and proper stochastic processes
 
@@ -45,6 +65,7 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 **Options:**
 
 - rand_distr::Distribution 
+- [rand](https://docs.rs/rand/0.7.3/rand/index.html)::[distributions](https://docs.rs/rand/0.7.3/rand/distributions/index.html)::[Distribution](https://docs.rs/rand/0.7.3/rand/distributions/trait.Distribution.html) 
 
 ## Differentiate Markov Chains in continuous space
 
