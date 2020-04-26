@@ -1,7 +1,7 @@
 //! Branching process example
 
 use ndarray::Array1;
-use markovian::traits::BranchingTrait;
+use markovian::prelude::*;
 use markovian::Branching;
 use preexplorer::prelude::*;
 use rayon::prelude::*;

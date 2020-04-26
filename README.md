@@ -20,8 +20,23 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 
 # To do list
 
+- [ ] FiniteMarkovChain
+  - [ ] From<>
+    - [ ] (T, FnMut(usize) -> T)
+  - [ ] TryFrom<>
+    - [ ] (T, Array1<T>, Array2<T>)
+    - [ ] FnMut(usize) -> 
+    - [ ] ... 
+- [ ] Branching
+  - [ ] From<>
+    - [ ] ... 
+  - [ ] TryFrom<>
+    - [ ] ... 
+  - [ ] Change the trait Branching to simply implement the functions?
 - [ ] Add `#[inline]` for pub methods as done in the `rand` crate. 
-- [ ] Document assumptions to create a process (probability distribution input)
+- [ ] Document 
+  - [ ] Assumptions to create a process (probability distribution input)
+  - [ ] main_traits
 - [ ] Add `extern crate crate_name;` in examples for explicit dependences. 
 - [ ] Tests
 - [ ] Add links in documentation to easy access of (from lib level documentation)

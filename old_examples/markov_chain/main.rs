@@ -1,4 +1,4 @@
-use markovian::traits::MarkovChainTrait;
+use markovian::prelude::*;
 use markovian::{Branching, MarkovChain};
 
 fn main() {

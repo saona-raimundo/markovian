@@ -2,7 +2,7 @@
 use preexplorer::prelude::*;
 
 // Traits
-use markovian::MarkovChainTrait;
+use markovian::prelude::*;
 
 fn main() {
 	let init_state: f64 = 0.0;

@@ -1,4 +1,4 @@
-use markovian::traits::CMarkovChainTrait;
+use markovian::prelude::*;
 use markovian::CMarkovChain;
 use preexplorer::prelude::*;
 
