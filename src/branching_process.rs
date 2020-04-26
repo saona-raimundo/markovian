@@ -1,5 +1,4 @@
 // Traits
-use core::iter::Chain;
 use rand_distr::Distribution;
 use rand::Rng;
 use crate::{State, StateIterator};
@@ -76,8 +75,7 @@ where
 {
 
 	#[inline]
-    fn trajectory(self) -> Chain<std::option::IntoIter<<Self as std::iter::Iterator>::Item>, Self> {
-    	self.state().cloned().into_iter().chain(self)
-    }
-
+	fn state_as_item(&self) -> Option<<Self as std::iter::Iterator>::Item> {
+		self.state().cloned()
+	}
 }

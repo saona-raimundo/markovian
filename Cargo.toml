@@ -24,6 +24,9 @@ rand = "0.7.3"
 rand_distr = "0.2.2"
 num-traits = "0.2.11"
 thiserror = "1.0.15"
+pretty_assertions = "0.6.1"
+approx = "0.3.2"
+rand_pcg = "0.2.1"
 
 [dev-dependencies]
 preexplorer = "0.1"

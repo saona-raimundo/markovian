@@ -8,11 +8,13 @@ use core::fmt::Debug;
 use crate::errors::InvalidState;
 use rand_distr::weighted::alias_method::WeightedIndex;
 use rand_distr::uniform::Uniform;
-use core::iter::Chain;
+
 
 // Functions
 use core::mem;
 
+/// Construction cost: O(n), n: size of the state space.
+/// Sample cost: O(1).
 #[derive(Debug, Clone)]
 pub struct FiniteMarkovChain<T, W, R> 
 where
@@ -91,9 +93,8 @@ where
 {
 
 	#[inline]
-    fn trajectory(self) -> Chain<std::option::IntoIter<<Self as std::iter::Iterator>::Item>, Self> {
-    	self.state().cloned().into_iter().chain(self)
-    }
-
+	fn state_as_item(&self) -> Option<<Self as std::iter::Iterator>::Item> {
+		self.state().cloned()
+	}
 }
 

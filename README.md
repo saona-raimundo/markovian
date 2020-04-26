@@ -1,25 +1,31 @@
 # markovian
-Simulation of Markov Processes as stochastic processes.
+Simulation of [Stochastic processes](https://en.wikipedia.org/wiki/Stochastic_process).
 
 # Main features
 
 - Easy construction of Markov processes, including:
   - Discrete time
-  - Continuous time (exponential times)
+  - Continuous time (exponential clocks)
 - Type agnostic
 
 # Changelog
 
 Last version:
 
-- 0.1.3
-  - Documentation added
-  - Re-export traits module to crate level
+- 0.2.1
+  - 
 
 For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Changelog.md).
 
 # To do list
 
+- [ ] Distributions
+  - [ ] Raw
+    - [ ] raw_dist! macro
+  - [ ] Weighted
+    - [ ] Move to custom_rand_distr?
+  - [ ] ExpWeighted
+    - [ ] Move to custom_rand_distr?
 - [ ] FiniteMarkovChain
   - [ ] From<>
     - [ ] (T, FnMut(usize) -> T)
@@ -27,7 +33,7 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
     - [ ] (T, Array1<T>, Array2<T>)
     - [ ] FnMut(usize) -> 
     - [ ] ... 
-- [ ] Branching
+- [ ] Branching, MarkovChain
   - [ ] From<>
     - [ ] ... 
   - [ ] TryFrom<>
@@ -71,17 +77,6 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 - **Needs:** 
   - Exact transitions
 
-## Implement Distribution
-
-**Goal:** Random processes are also source of random transitions, therefore, we should be able to sample transitions. 
-
-**Current implementation:** None
-
-**Options:**
-
-- rand_distr::Distribution 
-- [rand](https://docs.rs/rand/0.7.3/rand/index.html)::[distributions](https://docs.rs/rand/0.7.3/rand/distributions/index.html)::[Distribution](https://docs.rs/rand/0.7.3/rand/distributions/trait.Distribution.html) 
-
 ## Differentiate Markov Chains in continuous space
 
 **Goal:** Easier and checkable implementation of continuous space markov processes by using randomness from the chain to simulate the next step.
@@ -92,41 +87,6 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 
 - Needs
   - random generator choice. 
-
-## Sample trajectory
-
-**Goal:** Random processes are also source of random trajectories. Therefore, we should be able to sample them.
-
-**Current implementation:** None
-
-**Options:**
-
-- method sample_trajectory
-  - sample_trajectory_iter
-    as in rand_distr::Distribution
-
-## Random generator choice
-
-**Goal:** Include random generator to the construction step.
-
-**Current implementation:** New standard sampler for each step simulation. 
-
-**Options:**
-
-- rand
-
-## Exact transitions
-
-**Goal:** Integration with some crate for creation of a correct (sub-)distribution for each step. 
-
-**Current implementation:** f64 for probabilities and there is no correctness check. 
-
-**Options:**
-
-- Rational numbers
-- statrs
-- rand_distr
-- probability
 
 ## Enlarge traits
 
