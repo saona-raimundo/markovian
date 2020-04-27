@@ -1,3 +1,2 @@
 #[derive(Debug)]
-pub struct ExpWeighted {
-}
+pub struct ExpWeighted {}

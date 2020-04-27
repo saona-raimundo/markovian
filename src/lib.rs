@@ -1,8 +1,7 @@
 //! Simulation of sub-stochastic processes.
-//! 
+//!
 //! # Examples
-//! 
-
+//!
 
 pub use self::branching_process::BranchingProcess;
 pub use self::finite_markov_chain::FiniteMarkovChain;
@@ -14,9 +13,11 @@ mod finite_markov_chain;
 mod markov_chain;
 mod traits;
 
+pub mod distributions;
 /// Errors of this crate.
 pub mod errors;
-pub mod distributions;
+/// Ease interoperability with rand_distr crate.
+pub mod macros;
 
 // pub use continuous_time::*;
 // pub use discrete_time::*;
@@ -26,11 +27,9 @@ pub mod distributions;
 // mod discrete_time;
 // mod traits;
 
-
 pub mod prelude {
-	pub use crate::traits::*;
+    pub use crate::traits::*;
 }
-
 
 /// Testing random variables.
 pub mod test {

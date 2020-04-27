@@ -1,3 +1,2 @@
 #[derive(Debug)]
-pub struct Weighted {
-}
+pub struct Weighted {}
