@@ -10,8 +10,11 @@ use core::marker::PhantomData;
 // Functions
 use core::mem;
 
-/// Markov Chain in continuous (exponential) time, with arbitrary space.
+/// Markov Chain in continuous time, with arbitrary space.
 ///
+/// Rust allows for more than only exponential time in the transitions, so 
+/// does this crate. 
+/// 
 /// # Remarks
 /// 
 /// If your transition function `transition` could reuse of structs that implement
@@ -19,14 +22,14 @@ use core::mem;
 /// for the best performance possible, create your own struct that implements
 /// the `Transition<T, (N, T)>` trait.
 #[derive(Debug, Clone)]
-pub struct ContMarkovChain<N, T, F, R> {
+pub struct TimedMarkovChain<N, T, F, R> {
     state: T,
     transition: F,
     rng: R,
     phantom: PhantomData<N>,
 }
 
-impl<N, T, F, R> ContMarkovChain<N, T, F, R>
+impl<N, T, F, R> TimedMarkovChain<N, T, F, R>
 where
     R: Rng,
     F: Transition<T, (N, T)>,
@@ -34,7 +37,7 @@ where
 {
     #[inline]
     pub fn new(state: T, transition: F, rng: R) -> Self {
-        ContMarkovChain {
+        TimedMarkovChain {
             state,
             transition,
             rng,
@@ -43,7 +46,7 @@ where
     }
 }
 
-impl<N, T, F, R> State for ContMarkovChain<N, T, F, R>
+impl<N, T, F, R> State for TimedMarkovChain<N, T, F, R>
 where
     T: Debug + Clone,
 {
@@ -64,7 +67,7 @@ where
     }
 }
 
-impl<N, T, F, R> Iterator for ContMarkovChain<N, T, F, R>
+impl<N, T, F, R> Iterator for TimedMarkovChain<N, T, F, R>
 where
     T: Debug + Clone,
     F: Transition<T, (N, T)>,
@@ -80,7 +83,7 @@ where
     }
 }
 
-impl<N, T, F, R> StateIterator for ContMarkovChain<N, T, F, R>
+impl<N, T, F, R> StateIterator for TimedMarkovChain<N, T, F, R>
 where
     T: Debug + Clone,
     F: Transition<T, (N, T)>,
@@ -106,7 +109,7 @@ mod tests {
         let rng = crate::tests::rng(1);
         let expected = 1;
         let transition = |_: &u64| Raw::new(vec![(1.0, (1.0, expected))]);
-        let mc = ContMarkovChain::new(0, transition, rng);
+        let mc = TimedMarkovChain::new(0, transition, rng);
         for (period, state) in mc.take(100) {
             assert_eq!(period, 1.);
             assert_eq!(state, expected);
@@ -114,7 +117,7 @@ mod tests {
 
         let rng = crate::tests::rng(2);
         let transition = |_: &u64| Raw::new(vec![(0.5, (1.0, 1)), (0.5, (1.0, 2))]);
-        let mc = ContMarkovChain::new(0, transition, rng);
+        let mc = TimedMarkovChain::new(0, transition, rng);
         for (period, state) in mc.take(100) {
             assert_eq!(period, 1.);
             assert!(state == 1 || state == 2);
@@ -126,7 +129,7 @@ mod tests {
         let rng = crate::tests::rng(3);
         let expected = vec![(1., 1), (1., 2), (1., 1), (1., 1)];
         let transition = |_: &u64| Raw::new(vec![(0.5, (1.0, 1)), (0.5, (1.0, 2))]);
-        let mc = ContMarkovChain::new(0, transition, rng);
+        let mc = TimedMarkovChain::new(0, transition, rng);
         let sample: Vec<(f64, u64)> = mc.take(4).collect();
 
         assert_eq!(sample, expected);

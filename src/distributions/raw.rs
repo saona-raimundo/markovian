@@ -1,11 +1,21 @@
 // Traits
-use crate::traits::Probability;
+use core::fmt::Debug;
+use num_traits::{One, Zero};
 use rand::Rng;
 use rand_distr::Distribution;
-use rand_distr::Standard;
+
 // use num_traits::Zero;
 
 /// Distribution over possibly infinte iterators. 
+/// 
+/// # Correctedness
+/// 
+/// Bounds on probabilities are checked only in debug mode using `debug_assert`.
+/// This way, there are guarantees when developing code that probabilities
+/// have valid values, but during a release run there is no overhead!
+/// 
+/// # Costs
+/// 
 /// Sample cost: O(iterator length).
 /// Construction cost: O(1).
 /// 
@@ -26,8 +36,8 @@ impl<I> Raw<I> {
 
 impl<P, T, I> Distribution<T> for Raw<I>
 where
-    P: Probability,
-    Standard: Distribution<P>,
+    P: Zero + One + PartialOrd + Debug + Copy, 
+    f64: From<P>,
     I: IntoIterator<Item = (P, T)> + Clone,
 {
     #[inline]
@@ -35,16 +45,14 @@ where
     where
         R: Rng + ?Sized,
     {
-        let cum_goal: P = rng.gen(); // NOT CORRECT
+        let cum_goal: f64 = rng.gen(); // NOT CORRECT
 
-        let zero = P::zero();
-        let one = P::one();
-        let mut acc = P::zero();
+        let mut acc: f64 = 0.0;
 
         for (prob, state) in self.iter.clone() {
-            if zero > prob { panic!("Probabilities can not be negative. Tried to use {:?}", prob); }
-            acc = acc + prob;
-            if acc > one { panic!("Probabilities can not be more than one. Tried to use {:?}", acc); }
+        	acc = acc + f64::from(prob);
+            debug_assert!(P::zero() <= prob, "Probabilities can not be negative. Tried to use {:?}", prob);
+            debug_assert!(f64::from(P::one()) >= acc, "Probabilities can not be more than one. Tried to use {:?}", acc);
             if acc >= cum_goal {
                 return state;
             }

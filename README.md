@@ -19,10 +19,6 @@ For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Chang
 
 # To do list
 
-- [ ] Probabilities
-  - [ ] Noisy_probability
-    - [ ] P64
-    - [ ] P32
 - [ ] Distributions
   - [ ] Raw
     - [ ] raw_dist! macro

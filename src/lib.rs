@@ -7,14 +7,14 @@
 //! All methods are `inline`, by design. 
 
 pub use self::branching_process::BranchingProcess;
-pub use self::continuous_markov_chain::ContMarkovChain;
+pub use self::timed_markov_chain::TimedMarkovChain;
 pub use self::continuous_finite_markov_chain::ContFiniteMarkovChain;
 pub use self::finite_markov_chain::FiniteMarkovChain;
 pub use self::markov_chain::MarkovChain;
 pub use self::traits::{ExponentialClock, State, StateIterator};
 
 mod branching_process;
-mod continuous_markov_chain;
+mod timed_markov_chain;
 mod continuous_finite_markov_chain;
 mod finite_markov_chain;
 mod markov_chain;
