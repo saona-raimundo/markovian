@@ -11,7 +11,7 @@ pub use self::timed_markov_chain::TimedMarkovChain;
 pub use self::continuous_finite_markov_chain::ContFiniteMarkovChain;
 pub use self::finite_markov_chain::FiniteMarkovChain;
 pub use self::markov_chain::MarkovChain;
-pub use self::traits::{ExponentialClock, State, StateIterator};
+pub use self::traits::{State, StateIterator};
 
 mod branching_process;
 mod timed_markov_chain;
