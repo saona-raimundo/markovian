@@ -24,6 +24,7 @@ where
     D: Distribution<T>,
     R: Rng,
 {
+    #[inline]
     pub fn new(state: T, base_distribution: D, rng: R) -> Self {
         BranchingProcess {
             state,

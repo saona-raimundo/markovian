@@ -1,6 +1,7 @@
 // Traits
-use rand::Rng;
 use rand_distr::Distribution;
+use rand::Rng;
+
 
 /// Abstraction over transition matrix.
 ///
@@ -19,14 +20,14 @@ pub trait Transition<T, O> {
 impl<T, O, F, D> Transition<T, O> for F
 where
     F: Fn(&T) -> D,
-    D: DistributionOnce<O>,
+    D: Distribution<O>,
 {
     #[inline]
     fn sample_from<R>(&self, state: &T, rng: &mut R) -> O
     where
         R: Rng + ?Sized,
     {
-        self(state).sample_once(rng)
+        self(state).sample(rng)
     }
 }
 
@@ -37,7 +38,7 @@ mod tests {
 
     #[test]
     fn use_cases() {
-        let mut rng = crate::test::rng(1);
+        let mut rng = crate::tests::rng(1);
         let expected = 1;
         fn transition(_: &u64) -> Raw<Vec<(f64, u64)>> {
             Raw::new(vec![(1.0, 1)])

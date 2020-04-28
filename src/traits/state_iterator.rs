@@ -10,7 +10,7 @@ pub trait StateIterator: Iterator + State + Sized {
     ///
     /// # Remarks
     /// 1. Cloned is needed if the underlying iterator depends on its internal state.
-    /// 2. You might want to use #[inline], if there is any benefit for you.
+    /// 2. You should use #[inline] when implementing this method.
     fn state_as_item(&self) -> Option<<Self as std::iter::Iterator>::Item>;
 
     #[inline]

@@ -1,15 +1,18 @@
 // Traits
-use crate::traits::DistributionOnce;
 use crate::traits::Probability;
 use rand::Rng;
 use rand_distr::Distribution;
 use rand_distr::Standard;
 // use num_traits::Zero;
 
-/// A quick and higly error prone struct for quickly define a struct that
-/// implements `Distribution<T>`.
-/// `Clone` is needed, since `Distribution` is a trait for state-less struts.
-#[derive(Debug)]
+/// Distribution over possibly infinte iterators. 
+/// Sample cost: O(iterator length).
+/// Construction cost: O(1).
+/// 
+/// # Remarks
+/// 
+/// This struct is meant to be used when one needs to sample once from an infinte iterator.
+#[derive(Debug, Clone)]
 pub struct Raw<I> {
     iter: I,
 }
@@ -21,25 +24,27 @@ impl<I> Raw<I> {
     }
 }
 
-impl<P, T, I> DistributionOnce<T> for Raw<I>
+impl<P, T, I> Distribution<T> for Raw<I>
 where
     P: Probability,
     Standard: Distribution<P>,
     I: IntoIterator<Item = (P, T)> + Clone,
 {
     #[inline]
-    fn sample_once<R>(&self, rng: &mut R) -> T
+    fn sample<R>(&self, rng: &mut R) -> T
     where
         R: Rng + ?Sized,
     {
-        let cum_goal: P = rng.gen();
+        let cum_goal: P = rng.gen(); // NOT CORRECT
 
-        This is not correct. 
-
+        let zero = P::zero();
+        let one = P::one();
         let mut acc = P::zero();
 
         for (prob, state) in self.iter.clone() {
+            if zero > prob { panic!("Probabilities can not be negative. Tried to use {:?}", prob); }
             acc = acc + prob;
+            if acc > one { panic!("Probabilities can not be more than one. Tried to use {:?}", acc); }
             if acc >= cum_goal {
                 return state;
             }
@@ -47,30 +52,6 @@ where
         panic!("Sampling was not possible: probabilities did not cover all posiibilities. Check the type of your probabilities and all possibilities by rng.gen() there.")
     }
 }
-
-// impl<P, T, I> Distribution<T> for Raw<I>
-// where
-//     P: Probability,
-//     Standard: Distribution<P>,
-//     I: IntoIterator<Item = (P, T)> + Clone,
-// {
-//     #[inline]
-//     fn sample<R>(&self, rng: &mut R) -> T
-//     where
-//         R: Rng + ?Sized,
-//     {
-//         let cum_goal: P = rng.gen();
-//         let mut acc = P::zero();
-
-//         for (prob, state) in self.iter.clone() {
-//             acc = acc + prob;
-//             if acc >= cum_goal {
-//                 return state;
-//             }
-//         }
-//         panic!("Sampling was not possible: probabilities did not cover all posiibilities. Check the type of your probabilities and all possibilities by rng.gen() there.")
-//     }
-// }
 
 #[cfg(test)]
 mod tests {
@@ -81,23 +62,23 @@ mod tests {
 
     #[test]
     fn sampling_stability() {
-        let mut rng = crate::test::rng(1);
+        let mut rng = crate::tests::rng(1);
         let expected = 1;
         let dis = Raw::new(vec![(1.0, expected)]);
-        let sample = (0..100).map(|_| dis.sample(&mut rng));
+        let sample = (0..100).map(|_| dis.clone().sample(&mut rng));
         for x in sample {
             assert_eq!(x, expected);
         }
 
         let expected = 1;
-        let dis = Raw::new(vec![(std::u32::MAX, expected)]);
-        let sample = (0..100).map(|_| dis.sample(&mut rng));
+        let dis = Raw::new(vec![(1., expected)]);
+        let sample = (0..100).map(|_| dis.clone().sample(&mut rng));
         for x in sample {
             assert_eq!(x, expected);
         }
 
         let dis = Raw::new(vec![(0.5, 1), (0.5, 2)]);
-        let sample = (0..100).map(|_| dis.sample(&mut rng));
+        let sample = (0..100).map(|_| dis.clone().sample(&mut rng));
         for x in sample {
             assert!(x == 1 || x == 2);
         }
@@ -105,14 +86,14 @@ mod tests {
 
     #[test]
     fn value_stability() {
-        let mut rng = crate::test::rng(2);
+        let mut rng = crate::tests::rng(2);
         let expected = [2, 1, 1, 2];
         let dis = Raw::new(vec![(0.5, 1), (0.5, 2)]);
         let sample = [
-            dis.sample(&mut rng),
-            dis.sample(&mut rng),
-            dis.sample(&mut rng),
-            dis.sample(&mut rng),
+            dis.clone().sample(&mut rng),
+            dis.clone().sample(&mut rng),
+            dis.clone().sample(&mut rng),
+            dis.clone().sample(&mut rng),
         ];
 
         assert_eq!(sample, expected);

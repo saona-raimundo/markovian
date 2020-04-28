@@ -2,37 +2,39 @@
 //!
 //! # Examples
 //!
+//! # Remarks
+//!
+//! All methods are `inline`, by design. 
 
 pub use self::branching_process::BranchingProcess;
+pub use self::continuous_markov_chain::ContMarkovChain;
+pub use self::continuous_finite_markov_chain::ContFiniteMarkovChain;
 pub use self::finite_markov_chain::FiniteMarkovChain;
 pub use self::markov_chain::MarkovChain;
 pub use self::traits::{ExponentialClock, State, StateIterator};
 
 mod branching_process;
+mod continuous_markov_chain;
+mod continuous_finite_markov_chain;
 mod finite_markov_chain;
 mod markov_chain;
 mod traits;
 
+/// Ease interoperability with rand_distr crate.
 pub mod distributions;
 /// Errors of this crate.
 pub mod errors;
-/// Ease interoperability with rand_distr crate.
-pub mod macros;
 
-// pub use continuous_time::*;
-// pub use discrete_time::*;
-// pub use traits::*;
 
-// mod continuous_time;
-// mod discrete_time;
-// mod traits;
-
+/// Ease of use of this crate in general.
 pub mod prelude {
     pub use crate::traits::*;
 }
 
+
 /// Testing random variables.
-pub mod test {
+#[cfg(test)]
+pub mod tests {
     // Notes on testing
     //
     // Testing random number distributions correctly is hard. The following

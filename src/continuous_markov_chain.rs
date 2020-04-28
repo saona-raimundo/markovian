@@ -5,41 +5,45 @@ use rand::Rng;
 
 // Structs
 use crate::errors::InvalidState;
+use core::marker::PhantomData;
 
 // Functions
 use core::mem;
 
-/// Markov Chain in discrete time, with arbitrary space.
+/// Markov Chain in continuous (exponential) time, with arbitrary space.
 ///
 /// # Remarks
 /// 
 /// If your transition function `transition` could reuse of structs that implement
 /// the `Distribution<T>` trait in order to sample the next state, then, 
 /// for the best performance possible, create your own struct that implements
-/// the `Transition<T, T>` trait.
+/// the `Transition<T, (N, T)>` trait.
 #[derive(Debug, Clone)]
-pub struct MarkovChain<T, F, R> {
+pub struct ContMarkovChain<N, T, F, R> {
     state: T,
     transition: F,
     rng: R,
+    phantom: PhantomData<N>,
 }
 
-impl<T, F, R> MarkovChain<T, F, R>
+impl<N, T, F, R> ContMarkovChain<N, T, F, R>
 where
     R: Rng,
-    F: Transition<T, T>,
+    F: Transition<T, (N, T)>,
+    N: From<f64>,
 {
     #[inline]
     pub fn new(state: T, transition: F, rng: R) -> Self {
-        MarkovChain {
+        ContMarkovChain {
             state,
             transition,
             rng,
+            phantom: PhantomData,
         }
     }
 }
 
-impl<T, F, R> State for MarkovChain<T, F, R>
+impl<N, T, F, R> State for ContMarkovChain<N, T, F, R>
 where
     T: Debug + Clone,
 {
@@ -60,30 +64,32 @@ where
     }
 }
 
-impl<T, F, R> Iterator for MarkovChain<T, F, R>
+impl<N, T, F, R> Iterator for ContMarkovChain<N, T, F, R>
 where
     T: Debug + Clone,
-    F: Transition<T, T>,
+    F: Transition<T, (N, T)>,
     R: Rng,
 {
-    type Item = T;
+    type Item = (N, T);
 
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
-        self.state = self.transition.sample_from(&self.state, &mut self.rng);
-        self.state().cloned()
+        let (period, state) = self.transition.sample_from(&self.state, &mut self.rng);
+        self.state = state;
+        self.state().cloned().map(|state| (period, state))
     }
 }
 
-impl<T, F, R> StateIterator for MarkovChain<T, F, R>
+impl<N, T, F, R> StateIterator for ContMarkovChain<N, T, F, R>
 where
     T: Debug + Clone,
-    F: Transition<T, T>,
+    F: Transition<T, (N, T)>,
     R: Rng,
+    N: From<f64>,
 {
     #[inline]
     fn state_as_item(&self) -> Option<<Self as std::iter::Iterator>::Item> {
-        self.state().cloned()
+        self.state().cloned().map(|state| (N::from(0.0), state))
     }
 }
 
@@ -91,7 +97,7 @@ where
 mod tests {
     use super::*;
     use crate::distributions::Raw;
-    use pretty_assertions::assert_eq;
+    // use pretty_assertions::assert_eq;
 
     // use approx::abs_diff_eq;
 
@@ -99,27 +105,29 @@ mod tests {
     fn sampling_stability() {
         let rng = crate::tests::rng(1);
         let expected = 1;
-        let transition = |_: &u64| Raw::new(vec![(1.0, expected)]);
-        let mc = MarkovChain::new(0, transition, rng);
-        for x in mc.take(100) {
-            assert_eq!(x, expected);
+        let transition = |_: &u64| Raw::new(vec![(1.0, (1.0, expected))]);
+        let mc = ContMarkovChain::new(0, transition, rng);
+        for (period, state) in mc.take(100) {
+            assert_eq!(period, 1.);
+            assert_eq!(state, expected);
         }
 
         let rng = crate::tests::rng(2);
-        let transition = |_: &u64| Raw::new(vec![(0.5, 1), (0.5, 2)]);
-        let mc = MarkovChain::new(0, transition, rng);
-        for x in mc.take(100) {
-            assert!(x == 1 || x == 2);
+        let transition = |_: &u64| Raw::new(vec![(0.5, (1.0, 1)), (0.5, (1.0, 2))]);
+        let mc = ContMarkovChain::new(0, transition, rng);
+        for (period, state) in mc.take(100) {
+            assert_eq!(period, 1.);
+            assert!(state == 1 || state == 2);
         }
     }
 
     #[test]
     fn value_stability() {
         let rng = crate::tests::rng(3);
-        let expected = vec![1, 2, 1, 1];
-        let transition = |_: &u64| Raw::new(vec![(0.5, 1), (0.5, 2)]);
-        let mc = MarkovChain::new(0, transition, rng);
-        let sample: Vec<u64> = mc.take(4).collect();
+        let expected = vec![(1., 1), (1., 2), (1., 1), (1., 1)];
+        let transition = |_: &u64| Raw::new(vec![(0.5, (1.0, 1)), (0.5, (1.0, 2))]);
+        let mc = ContMarkovChain::new(0, transition, rng);
+        let sample: Vec<(f64, u64)> = mc.take(4).collect();
 
         assert_eq!(sample, expected);
     }

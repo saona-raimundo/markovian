@@ -7,6 +7,7 @@ pub struct InvalidState<T: std::fmt::Debug> {
 }
 
 impl<T: std::fmt::Debug> InvalidState<T> {
+	#[inline]
     pub fn new(state: T) -> Self {
         InvalidState { state }
     }
