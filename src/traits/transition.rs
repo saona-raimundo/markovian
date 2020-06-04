@@ -50,4 +50,18 @@ mod tests {
 
         assert_eq!(transition.sample_from(&0, &mut rng), expected);
     }
+
+    #[test]
+    fn construction() {
+        let mut rng = crate::tests::rng(2);
+        let expected: f64 = 0.04241939711604948;
+
+        fn transition(_: &u64) -> rand_distr::StandardNormal {
+            rand_distr::StandardNormal
+        };
+
+        let sample: f64 = transition.sample_from(&0, &mut rng);
+        assert_eq!(sample, expected);
+
+    }
 }

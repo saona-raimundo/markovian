@@ -10,43 +10,7 @@ Simulation of [Stochastic processes](https://en.wikipedia.org/wiki/Stochastic_pr
 
 # Changelog
 
-Last version:
-
-- 0.2.1
-  - 
-
-For more, see [Changelog](https://github.com/rasa200/markovian/blob/master/Changelog.md).
-
-# To do list
-
-- [ ] Distributions
-  - [ ] Raw
-    - [ ] raw_dist! macro
-  - [ ] Weighted
-    - [ ] Move to custom_rand_distr?
-  - [ ] ExpWeighted
-    - [ ] Move to custom_rand_distr?
-- [ ] FiniteMarkovChain
-  - [ ] From<>
-    - [ ] (T, FnMut(usize) -> T)
-  - [ ] TryFrom<>
-    - [ ] (T, Array1<T>, Array2<T>)
-    - [ ] FnMut(usize) -> 
-    - [ ] ... 
-- [ ] Branching, MarkovChain
-  - [ ] From<>
-    - [ ] ... 
-  - [ ] TryFrom<>
-    - [ ] ...  
-- [ ] Document 
-  - [ ] main_traits
-- [ ] Add `extern crate crate_name;` in examples for explicit dependences. 
-- [ ] Tests
-- [ ] Add links in documentation to easy access of (from lib level documentation)
-  - [ ] FiniteMarkovChain
-  - [ ] MarkovChain
-  - [ ] BranchingProcess
-  - [ ] ContMarkovChain
+See [Changelog](https://github.com/rasa200/markovian/blob/master/Changelog.md).
 
 # Roadmap
 

@@ -32,3 +32,8 @@ ndarray = "0.13.0"
 pretty_assertions = "0.6.1"
 approx = "0.3.2"
 rand_pcg = "0.2.1"
+criterion = "0.3.2"
+
+[[bench]]
+name = "brownian_motion"
+harness = false

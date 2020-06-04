@@ -46,6 +46,11 @@ where
     }
 
     #[inline]
+    fn state_mut(&mut self) -> Option<&mut Self::Item> {
+        Some(&mut self.state)
+    }
+
+    #[inline]
     fn set_state(
         &mut self,
         mut new_state: Self::Item,

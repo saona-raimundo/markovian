@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.1.4 
+## 0.2.1
 
-- 
+- New design to serve as an extension of the rand crate.
+- Include different implementations by a sub-module structure.
+- Basic benchmark added.
 
 ## 0.1.3
 

@@ -1,17 +1,21 @@
 //! Simulation of sub-stochastic processes.
 //!
+//! # Goal
+//!
+//! Serve as an extension of the [rand crate](https://crates.io/crates/rand) for sub-stochastic processes.
+//! 
 //! # Examples
 //!
 //! # Remarks
 //!
-//! All methods are `inline`, by design. 
+//! All methods are `inline`, by design.
 
 pub use self::branching_process::BranchingProcess;
 pub use self::timed_markov_chain::TimedMarkovChain;
 pub use self::continuous_finite_markov_chain::ContFiniteMarkovChain;
 pub use self::finite_markov_chain::FiniteMarkovChain;
 pub use self::markov_chain::MarkovChain;
-pub use self::traits::{State, StateIterator};
+pub use self::traits::{State, StateIterator, Transition};
 
 mod branching_process;
 mod timed_markov_chain;

@@ -8,6 +8,11 @@ pub trait State {
         None
     }
 
+    #[inline]
+    fn state_mut(&mut self) -> Option<&mut Self::Item> {
+        None
+    }
+
     /// # Remarks
     ///
     /// You might want to use [core::mem::swap](https://doc.rust-lang.org/core/mem/fn.swap.html).

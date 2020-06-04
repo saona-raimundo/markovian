@@ -51,6 +51,11 @@ where
     }
 
     #[inline]
+    fn state_mut(&mut self) -> Option<&mut Self::Item> {
+        Some(&mut self.state)
+    }
+
+    #[inline]
     fn set_state(
         &mut self,
         mut new_state: Self::Item,
@@ -120,6 +125,17 @@ mod tests {
         let transition = |_: &u64| Raw::new(vec![(0.5, 1), (0.5, 2)]);
         let mc = MarkovChain::new(0, transition, rng);
         let sample: Vec<u64> = mc.take(4).collect();
+
+        assert_eq!(sample, expected);
+    }
+
+    #[test]
+    fn construction() {
+        let rng = crate::tests::rng(4);
+        let expected = 0.;
+        let transition = |_: &f64| rand_distr::StandardNormal;
+        let mut mc = MarkovChain::new(0., transition, rng);
+        let sample: f64 = mc.next().unwrap();
 
         assert_eq!(sample, expected);
     }
