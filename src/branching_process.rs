@@ -12,7 +12,12 @@ use crate::errors::InvalidState;
 use core::mem;
 
 #[derive(Debug, Clone)]
-pub struct BranchingProcess<T, D, R> {
+pub struct BranchingProcess<T, D, R> 
+where
+    T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
+    D: Distribution<T>,
+    R: Rng,
+{
     state: T,
     base_distribution: D,
     rng: R,
@@ -20,7 +25,7 @@ pub struct BranchingProcess<T, D, R> {
 
 impl<T, D, R> BranchingProcess<T, D, R>
 where
-    T: Unsigned,
+    T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
     R: Rng,
 {
@@ -36,7 +41,9 @@ where
 
 impl<T, D, R> State for BranchingProcess<T, D, R>
 where
-    T: std::fmt::Debug + Unsigned + Clone,
+    T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
+    D: Distribution<T>,
+    R: Rng,
 {
     type Item = T;
 
@@ -62,7 +69,7 @@ where
 
 impl<T, D, R> Iterator for BranchingProcess<T, D, R>
 where
-    T: Debug + PartialEq + Clone + One + Zero + PartialOrd,
+    T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
     R: Rng,
 {
@@ -75,6 +82,7 @@ where
         while count < self.state {
             acc = acc + self.base_distribution.sample(&mut self.rng);
         }
+        self.state = acc.clone();
         Some(acc)
     }
 }
@@ -90,3 +98,25 @@ where
         self.state().cloned()
     }
 }
+
+impl<T, D, R> Distribution<T> for BranchingProcess<T, D, R>
+where
+    T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
+    D: Distribution<T>,
+    R: Rng,
+{
+    /// Sample a possible next state. 
+    #[inline]
+    fn sample<R2>(&self, rng: &mut R2) -> T 
+    where
+        R2: Rng + ?Sized,
+    { 
+        let count = T::one();
+        let mut acc = T::zero();
+        while count < self.state {
+            acc = acc + self.base_distribution.sample(rng);
+        }
+        acc
+    }
+}
+

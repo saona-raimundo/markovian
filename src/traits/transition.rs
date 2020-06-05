@@ -9,8 +9,7 @@ use rand::Rng;
 ///  
 /// Output parameter `O` allows sampling more than only the next state,
 /// for example, continuous markov chains are able to sample both a new state
-/// and an exponential clock which represents the time the chain takes to make
-/// the transition.
+/// and a time step.
 pub trait Transition<T, O> {
     fn sample_from<R>(&self, state: &T, rng: &mut R) -> O
     where

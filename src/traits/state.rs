@@ -1,5 +1,8 @@
 use crate::errors::InvalidState;
 
+/// Possible public state.
+/// 
+/// `State` should be implemented when it is absolutely clear what a `state` for your your struct means.
 pub trait State {
     type Item: core::fmt::Debug;
 

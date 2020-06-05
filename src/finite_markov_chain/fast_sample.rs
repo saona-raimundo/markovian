@@ -120,3 +120,22 @@ where
         self.state().cloned()
     }
 }
+
+impl<T, W, R> Distribution<T> for FiniteMarkovChain<T, W, R>
+where
+    W: Weight,
+    Uniform<W>: Debug + Clone,
+    T: Debug + PartialEq + Clone,
+    R: Rng,
+{
+    /// Sample a possible next state. 
+    #[inline]
+    fn sample<R2>(&self, rng: &mut R2) -> T
+    where
+        R2: Rng + ?Sized,
+    { 
+        let new_index = self.transition_matrix[self.state_index].sample(rng);
+
+        self.state_space[new_index].clone()
+    }
+}

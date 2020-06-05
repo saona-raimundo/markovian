@@ -140,3 +140,25 @@ where
         self.state().cloned().map(|x| (W::from(0.0), x))
     }
 }
+
+impl<T, W, R> Distribution<(W, T)> for ContFiniteMarkovChain<T, W, R>
+where
+    W: Float + Weight,
+    Exp1: Distribution<W>,
+    Uniform<W>: Debug + Clone,
+    T: Debug + PartialEq + Clone,
+    R: Rng,
+{
+    /// Sample a possible next state. 
+    #[inline]
+    fn sample<R2>(&self, rng: &mut R2) -> (W, T) 
+    where
+        R2: Rng + ?Sized,
+    { 
+        let new_index = self.transition_matrix[self.state_index].sample(rng);
+        let rate = self.transiton_clock[self.state_index];
+        let step = Exp::new(rate).unwrap().sample(rng);
+
+        (step, self.state_space[new_index].clone())
+    }
+}

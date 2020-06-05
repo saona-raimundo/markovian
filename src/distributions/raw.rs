@@ -8,6 +8,18 @@ use rand_distr::Distribution;
 
 /// Distribution over possibly infinte iterators. 
 /// 
+/// # Examples
+/// 
+/// With help of the `raw_dist` macro, we construct a random variable that samples always a fixed value.
+/// ```
+/// # use markovian::prelude::*;
+/// # use rand::prelude::*;
+/// let value = 0;
+/// let dis = raw_dist![(1.0, value)];
+///
+/// assert_eq!(value, dis.sample(&mut thread_rng()));
+/// ```
+/// 
 /// # Correctedness
 /// 
 /// Bounds on probabilities are checked only in debug mode using `debug_assert`.
@@ -22,7 +34,7 @@ use rand_distr::Distribution;
 /// # Remarks
 /// 
 /// This struct is meant to be used when one needs to sample once from an infinte iterator.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Raw<I> {
     iter: I,
 }
@@ -67,25 +79,26 @@ mod tests {
     use pretty_assertions::assert_eq;
     use rand_distr::Distribution;
     // use approx::abs_diff_eq;
+    use crate::raw_dist;
 
     #[test]
     fn sampling_stability() {
         let mut rng = crate::tests::rng(1);
         let expected = 1;
-        let dis = Raw::new(vec![(1.0, expected)]);
+        let dis = raw_dist![(1.0, expected)];
         let sample = (0..100).map(|_| dis.clone().sample(&mut rng));
         for x in sample {
             assert_eq!(x, expected);
         }
 
         let expected = 1;
-        let dis = Raw::new(vec![(1., expected)]);
+        let dis = raw_dist![(1., expected)];
         let sample = (0..100).map(|_| dis.clone().sample(&mut rng));
         for x in sample {
             assert_eq!(x, expected);
         }
 
-        let dis = Raw::new(vec![(0.5, 1), (0.5, 2)]);
+        let dis = raw_dist![(0.5, 1), (0.5, 2)];
         let sample = (0..100).map(|_| dis.clone().sample(&mut rng));
         for x in sample {
             assert!(x == 1 || x == 2);
@@ -96,7 +109,7 @@ mod tests {
     fn value_stability() {
         let mut rng = crate::tests::rng(2);
         let expected = [2, 1, 1, 2];
-        let dis = Raw::new(vec![(0.5, 1), (0.5, 2)]);
+        let dis = raw_dist![(0.5, 1), (0.5, 2)];
         let sample = [
             dis.clone().sample(&mut rng),
             dis.clone().sample(&mut rng),

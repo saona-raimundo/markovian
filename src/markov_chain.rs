@@ -1,4 +1,5 @@
 // Traits
+use rand_distr::Distribution;
 use crate::traits::{State, StateIterator, Transition};
 use core::fmt::Debug;
 use rand::Rng;
@@ -92,6 +93,23 @@ where
     }
 }
 
+impl<T, F, R> Distribution<T> for MarkovChain<T, F, R>
+where
+    T: Debug + Clone,
+    F: Transition<T, T>,
+    R: Rng,
+{
+    /// Sample a possible next state. 
+    #[inline]
+    fn sample<R2>(&self, rng: &mut R2) -> T
+    where
+        R2: Rng + ?Sized,
+    { 
+        self.transition.sample_from(&self.state, rng)
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -132,7 +150,7 @@ mod tests {
     #[test]
     fn construction() {
         let rng = crate::tests::rng(4);
-        let expected = 0.;
+        let expected = 0.39515292318166956;
         let transition = |_: &f64| rand_distr::StandardNormal;
         let mut mc = MarkovChain::new(0., transition, rng);
         let sample: f64 = mc.next().unwrap();

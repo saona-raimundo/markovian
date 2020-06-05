@@ -6,23 +6,60 @@
 //! 
 //! # Examples
 //!
+//! ## Discrete time
+//! 
+//! Construction of a random walk in the integers.
+//! ```
+//! # #![allow(unused_mut)]
+//! # use markovian::prelude::*;
+//! # use rand::prelude::*;
+//! let init_state: i32 = 0;
+//! let transition = |state: &i32| raw_dist![(0.5, state + 1), (0.5, state - 1)];
+//! let rng = thread_rng();
+//! let mut mc = markovian::MarkovChain::new(init_state, transition, rng);
+//! ```  
+//! 
+	// ! ## Continuous time
+	// ! 
+	// ! Construction of a random walk in the integers, with expponential time for each transition.
+	// ! ```
+	// ! # #![allow(unused_mut)]
+	// ! let init_state: i32 = 0;
+	// ! let transition = |state: i32| vec![(1., state + 1), (1., state - 1)];
+	// ! let rng = thread_rng();
+	// ! let mut mc = markovian::TimedMarkovChain::new(init_state, transition, rng);
+	// ! ``` 
+//! 
+//! ## Branching process
+//!
+//! Construction using density p(0) = 0.3, p(1) = 0.4, p(2) = 0.3. 
+//! ```
+//! # #![allow(unused_mut)]
+//! # use markovian::prelude::*;
+//! # use rand::prelude::*;
+//! let init_state: u32 = 1;
+//! let base_distribution = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
+//! let rng = thread_rng();
+//! let mut branching_process = markovian::BranchingProcess::new(init_state, base_distribution, rng);
+//! ``` 
 //! # Remarks
 //!
 //! All methods are `inline`, by design.
 
 pub use self::branching_process::BranchingProcess;
-pub use self::timed_markov_chain::TimedMarkovChain;
 pub use self::continuous_finite_markov_chain::ContFiniteMarkovChain;
 pub use self::finite_markov_chain::FiniteMarkovChain;
 pub use self::markov_chain::MarkovChain;
+pub use self::timed_markov_chain::TimedMarkovChain;
 pub use self::traits::{State, StateIterator, Transition};
 
 mod branching_process;
-mod timed_markov_chain;
 mod continuous_finite_markov_chain;
 mod finite_markov_chain;
 mod markov_chain;
+mod timed_markov_chain;
 mod traits;
+mod macros;
 
 /// Ease interoperability with rand_distr crate.
 pub mod distributions;
@@ -33,6 +70,8 @@ pub mod errors;
 /// Ease of use of this crate in general.
 pub mod prelude {
     pub use crate::traits::*;
+    pub use crate::{raw_dist};
+    pub use crate::distributions::Raw;
 }
 
 

@@ -1,4 +1,5 @@
 // Traits
+use rand_distr::Distribution;
 use crate::traits::{State, StateIterator, Transition};
 use core::fmt::Debug;
 use rand::Rng;
@@ -98,6 +99,23 @@ where
     #[inline]
     fn state_as_item(&self) -> Option<<Self as std::iter::Iterator>::Item> {
         self.state().cloned().map(|state| (N::from(0.0), state))
+    }
+}
+
+impl<N, T, F, R> Distribution<(N, T)> for TimedMarkovChain<N, T, F, R>
+where
+    T: Debug + Clone,
+    F: Transition<T, (N, T)>,
+    R: Rng,
+    N: From<f64>,
+{
+    /// Sample a possible next state. 
+    #[inline]
+    fn sample<R2>(&self, rng: &mut R2) -> (N, T)
+    where
+        R2: Rng + ?Sized,
+    { 
+        self.transition.sample_from(&self.state, rng)
     }
 }
 
