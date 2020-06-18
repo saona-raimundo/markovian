@@ -5,6 +5,7 @@
     - [ ] Exact
     - [ ] Approximate
   - [ ] default + fast / accurate
+    - [ ] There is an epsilon-strong simulation method for brownian motion!! (accurate)
 - [ ] Interoperability
   - [ ] FiniteMarkovChain
     - [ ] From<>

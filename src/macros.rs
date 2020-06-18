@@ -1,5 +1,3 @@
-use crate::distributions::Raw;
-
 /// Creates a [`Raw`] struct by first allocating a `Vec` and passing it to `Raw::new`.
 /// 
 /// If you need to pass an iterator, use `Raw::new` method.
@@ -13,7 +11,7 @@ macro_rules! raw_dist {
             $(
                 temp_vec.push($x);
             )*
-            Raw::new(temp_vec)
+            crate::distributions::Raw::new(temp_vec)
         }
     };
 }
@@ -21,7 +19,8 @@ macro_rules! raw_dist {
 
 #[cfg(test)]
 mod tests {
-	use super::*;
+	// use super::*;
+	use crate::distributions::Raw;
 
 	#[test]
 	fn construction() {
