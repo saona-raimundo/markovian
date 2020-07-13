@@ -26,7 +26,7 @@ num-traits = "0.2.11"
 thiserror = "1.0.15"
 
 [dev-dependencies]
-preexplorer = "0.1"
+preexplorer = {path = "../preexplorer"}
 rayon = "1.3.0"
 ndarray = "0.13.0"
 pretty_assertions = "0.6.1"

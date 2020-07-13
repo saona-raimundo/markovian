@@ -1,15 +1,3 @@
-//! Branching process in the natural numbers NN = {0, 1, 2, ...}.
-//! It is characterized by a density p over NN.
-//! 
-//! The stochastic process can be thought of the size of a population. 
-//! In this population, each individual is identical to the rest and they are 
-//! independent of each other. Moreover, at each time step, 
-//! individuals have descendents and die. Their descendants 
-//! constitutes the second generation and the process repeats. 
-//! The overall process is therefore characterized by the number of 
-//! offsprings an individual has. 
-//! The resulting process is a Markov Chain in NN.
-
 // Traits
 use crate::{State, StateIterator};
 use core::fmt::Debug;
@@ -23,6 +11,17 @@ use crate::errors::InvalidState;
 // Functions
 use core::mem;
 
+/// Branching process in the natural numbers NN = {0, 1, 2, ...}.
+/// 
+/// A Branching process is characterized by a density p over NN. It can be 
+/// thought of the size of a population. 
+/// In this population, each individual is identical to the rest and they are 
+/// independent of each other. Moreover, at each time step, 
+/// individuals have descendents and die. Their descendants 
+/// constitutes the second generation and the process repeats. 
+/// The overall process is therefore characterized by the number of 
+/// offsprings an individual has. 
+/// The resulting process is a Markov Chain in NN.
 #[derive(Debug, Clone)]
 pub struct BranchingProcess<T, D, R> 
 where
@@ -121,10 +120,11 @@ where
     /// ```
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
-        let count = T::one();
+        let mut count = T::one();
         let mut acc = T::zero();
-        while count < self.state {
+        while count <= self.state {
             acc = acc + self.base_distribution.sample(&mut self.rng);
+            count = count + T::one();
         }
         self.state = acc.clone();
         Some(acc)
