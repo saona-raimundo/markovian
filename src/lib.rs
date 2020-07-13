@@ -1,4 +1,4 @@
-//! Simulation of sub-stochastic processes.
+//! Simulation of (sub-)stochastic processes.
 //!
 //! # Goal
 //!
