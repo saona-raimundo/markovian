@@ -75,10 +75,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::Raw;
     use pretty_assertions::assert_eq;
     use rand_distr::Distribution;
-    // use approx::abs_diff_eq;
     use crate::raw_dist;
 
     #[test]

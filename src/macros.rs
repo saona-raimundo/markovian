@@ -3,6 +3,21 @@
 /// If you need to pass an iterator, use `Raw::new` method.
 /// 
 /// [`Raw`]: distributions/struct.Raw.html
+/// 
+/// # Examples
+/// 
+/// With help of the `raw_dist` macro, we construct a random variable that samples always a fixed value.
+/// ```
+/// # use markovian::prelude::*;
+/// # use rand::prelude::*;
+/// # #[macro_use] extern crate markovian;
+/// # fn main() {
+/// let value = 0;
+/// let dis: Raw<_> = raw_dist![(1.0, value)];
+///
+/// assert_eq!(value, dis.sample(&mut thread_rng()));
+/// }
+/// ```
 #[macro_export]
 macro_rules! raw_dist {
     ( $( $x:expr ),* ) => {
@@ -11,7 +26,7 @@ macro_rules! raw_dist {
             $(
                 temp_vec.push($x);
             )*
-            crate::distributions::Raw::new(temp_vec)
+            $crate::distributions::Raw::new(temp_vec)
         }
     };
 }

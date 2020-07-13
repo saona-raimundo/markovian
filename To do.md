@@ -20,8 +20,6 @@
     - [ ] TryFrom<>
       - [ ] ...  
 - [ ] Tests
-  - [ ] Documentation
-    - [ ] Go through old documentation
   - [ ] Examples
     - [ ] Old examples
 
