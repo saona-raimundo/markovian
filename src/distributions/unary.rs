@@ -3,15 +3,31 @@ use core::marker::PhantomData;
 use rand::Rng;
 use rand_distr::Distribution;
 
-/// Concrete struct for the function of a `Distribution`. 
+/// Concrete struct for the function of a `Distribution. 
+/// 
+/// # Examples
+/// 
+/// The squared of a exponential.
+/// ```
+/// # use rand_distr::Exp1;
+/// # use markovian::distributions::Unary;
+/// let exp_squared = Unary::new(|x: f64| x.powi(2_i32),  Exp1);
+/// ```
 #[derive(Debug, Copy, Clone)]
-pub struct Unary<S, T, F, D> {
+pub struct Unary<S, T, F, D> 
+where
+    F: Fn(S) -> T,
+    D: Distribution<S>,
+{
     func: F,
     distr: D,
     phantom: PhantomData<(S, T)>
 }
 
 impl<S, T, F, D> Unary<S, T, F, D>
+where
+    F: Fn(S) -> T,
+    D: Distribution<S>,
 {
     #[inline]
     pub fn new(func: F, distr: D) -> Self {
