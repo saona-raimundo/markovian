@@ -1,4 +1,9 @@
 # markovian
+[![Download](https://img.shields.io/crates/d/markovian)](https://crates.io/crates/markovian)
+[![License](https://img.shields.io/crates/l/markovian)](https://github.com/rasa200/markovian)
+[![Docs](https://docs.rs/markovian/badge.svg)](https://docs.rs/markovian/)
+[![Crate](https://img.shields.io/crates/v/markovian.svg)](https://crates.io/crates/markovian)
+
 Simulation of [Stochastic processes](https://en.wikipedia.org/wiki/Stochastic_process).
 
 # Goal
