@@ -1,4 +1,3 @@
-// use criterion::*;
 use rand::Rng;
 use rand::prelude::thread_rng;
 use rand_distr::StandardNormal;

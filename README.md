@@ -15,6 +15,7 @@ Serve as an extension of the [rand crate](https://crates.io/crates/rand) for sub
   - Discrete time
   - Continuous time (exponential clocks)
 - Type agnostic
+- Zero-cost abstraction
 
 # Changelog
 
