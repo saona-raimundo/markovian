@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2 [ongoing]
+
+- 
+
 ## 0.2.1
 
 - New design to serve as an extension of the rand crate.
