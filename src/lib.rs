@@ -179,7 +179,6 @@ pub mod distributions;
 /// Errors of this crate.
 pub mod errors;
 
-
 /// Ease of use of this crate in general.
 pub mod prelude {
     pub use crate::traits::*;

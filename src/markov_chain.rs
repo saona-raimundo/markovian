@@ -18,6 +18,17 @@ use core::mem;
 /// the `Distribution<T>` trait in order to sample the next state, then, 
 /// for the best performance possible, create your own struct that implements
 /// the `Transition<T, T>` trait.
+///
+/// # Examples
+///
+/// Random walk in the integers.
+/// ```
+/// # use markovian::{MarkovChain, prelude::*};
+/// # use rand::prelude::*;
+/// let init_state: i32 = 0;
+/// let transition = |state: &i32| Raw::new(vec![(0.5, state + 1), (0.5, state - 1)]);
+/// MarkovChain::new(init_state, &transition, thread_rng());
+/// ```
 #[derive(Debug, Clone)]
 pub struct MarkovChain<T, F, R> {
     state: T,

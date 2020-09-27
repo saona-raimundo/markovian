@@ -1,5 +1,4 @@
-use markovian::prelude::*;
-use markovian::{MarkovChain};
+use markovian::{MarkovChain, prelude::*};
 use rand::prelude::*;
 
 fn main() {

@@ -8,6 +8,10 @@ use rand_distr::Distribution;
 
 /// Distribution over possibly infinte iterators. 
 /// 
+/// A random variable is represented by an iterator that yields values ``(P, T)``,
+/// where ``P`` represents the probability of the realization ``T``.
+/// See [Distribution implementation] for the trait constrains over ``P``.
+/// 
 /// # Examples
 /// 
 /// With help of the `raw_dist` macro, we construct a random variable that samples always a fixed value.
@@ -15,7 +19,7 @@ use rand_distr::Distribution;
 /// # use markovian::prelude::*;
 /// # use rand::prelude::*;
 /// let value = 0;
-/// let dis = raw_dist![(1.0, value)];
+/// let dis = raw_dist![(1, value)];
 ///
 /// assert_eq!(value, dis.sample(&mut thread_rng()));
 /// ```
@@ -34,6 +38,8 @@ use rand_distr::Distribution;
 /// # Remarks
 /// 
 /// This struct is meant to be used when one needs to sample once from an infinte iterator.
+///
+/// [Distribution implementation]: struct.Raw.html#impl-Distribution<T>
 #[derive(Debug, Clone, PartialEq)]
 pub struct Raw<I> {
     iter: I,
@@ -62,9 +68,9 @@ where
         let mut acc: f64 = 0.0;
 
         for (prob, state) in self.iter.clone() {
-        	acc = acc + f64::from(prob);
             debug_assert!(P::zero() <= prob, "Probabilities can not be negative. Tried to use {:?}", prob);
             debug_assert!(f64::from(P::one()) >= acc, "Probabilities can not be more than one. Tried to use {:?}", acc);
+        	acc = acc + f64::from(prob);
             if acc >= cum_goal {
                 return state;
             }
@@ -78,6 +84,17 @@ mod tests {
     use pretty_assertions::assert_eq;
     use rand_distr::Distribution;
     use crate::raw_dist;
+
+    #[test]
+    fn constants() {
+        let mut rng = crate::tests::rng(1);
+        let expected = 1;
+        let dis = raw_dist![(1, expected)];
+        let sample = (0..100).map(|_| dis.sample(&mut rng));
+        for x in sample {
+            assert_eq!(x, expected);
+        }
+    }
 
     #[test]
     fn sampling_stability() {
