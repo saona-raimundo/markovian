@@ -3,16 +3,9 @@
 ## 0.3.1 [ongoing]
 
 - Interoperability:
-  - FiniteMarkovChain
+  - FiniteMarkovChain from matrices
 - Include ndarray as a dependence
 - Improve documentation
-  - Traits:
-    - State
-    - StateIterator
-  - Structs:
-    - FiniteMarkovChain
-  - Examples:
-    - FiniteMarkovChain
 
 ## 0.2.1
 
