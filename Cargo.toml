@@ -11,7 +11,7 @@ homepage = "https://crates.io/crates/markovian"
 description = """
 Simulation of Markov Processes as stochastic processes.
 """
-keywords = ["chain", "markov", "probability", "random", "numerics"]
+keywords = ["chain", "markov", "probability", "random", "numerics", "math", "mathematics"]
 categories = ["science", "mathematics", "simulation"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
