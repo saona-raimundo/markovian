@@ -1,6 +1,6 @@
 # markovian
 [![Download](https://img.shields.io/crates/d/markovian)](https://crates.io/crates/markovian)
-[![License](https://img.shields.io/crates/l/markovian)](https://github.com/rasa200/markovian)
+[![License](https://img.shields.io/crates/l/markovian)](https://github.com/saona-raimundo/markovian)
 [![Docs](https://docs.rs/markovian/badge.svg)](https://docs.rs/markovian/)
 [![Crate](https://img.shields.io/crates/v/markovian.svg)](https://crates.io/crates/markovian)
 
@@ -19,7 +19,7 @@ Serve as an extension of the [rand crate](https://crates.io/crates/rand) for sub
 
 # Changelog
 
-See [Changelog](https://github.com/rasa200/markovian/blob/master/Changelog.md).
+See [Changelog](https://github.com/saona-raimundo/markovian/blob/master/Changelog.md).
 
 # Contribution
 
