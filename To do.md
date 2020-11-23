@@ -1,5 +1,18 @@
 # To do
 
+## FiniteMarkovChain
+
+- Documentation
+  - Examples
+  - Add to the readme, so that crates.io is better presented
+  - Compare with [mkv_chain](https://crates.io/crates/mkv_chain)
+
+## Macros
+
+- Learn to do useful macros!
+
+## Organization
+
 - **Modules organization:** different algorithms for simulation
   - Exact
   - Fast
