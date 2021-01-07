@@ -12,8 +12,8 @@ Serve as an extension of the [rand crate](https://crates.io/crates/rand) for sub
 # Main features
 
 - Easy construction of Markov processes, including:
-  - Discrete time
-  - Continuous time (exponential clocks)
+  - Finite/Infinite states
+  - Discrete/continuous time
 - Type agnostic
 - Zero-cost abstraction
 
@@ -24,3 +24,17 @@ See [Changelog](https://github.com/saona-raimundo/markovian/blob/master/Changelo
 # Contribution
 
 Your contribution is highly appreciated. Do not hesitate to open an issue or a pull request. Note that any contribution submitted for inclusion in the project will be licensed according to the terms of the dual license (MIT and Apache-2.0).
+
+# Related crates
+
+## Statistics
+
+[bio::stats](https://crates.io/crates/bio) - Mathematical and statistical tools for bioinformatics, including Hidden Markov Chains.
+
+[statrs](https://crates.io/crates/statrs) - Statistical utilities for Rust scientific computing.
+
+[mkv_chain](https://crates.io/crates/mkv_chain) - Finite state Markov Chains
+
+## Simulation
+
+[rand](https://crates.io/crates/rand) - Random number generation.

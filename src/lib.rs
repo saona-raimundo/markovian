@@ -6,6 +6,18 @@
 //! 
 //! # Examples
 //!
+//! ## Finite Markov Chains
+//!
+//! An absorbing Markov Chain with one transient state and one absorbing state.
+//! ```
+//! # use ndarray::array;
+//! # use markovian::{FiniteMarkovChain, State};
+//! let mut mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+//! assert_eq!(mc.state(), Some(&0));
+//! assert_eq!(mc.state_space(), &vec![0, 1]);
+//! println!("At time {}, the state is {}", 1_000, mc.nth(1_000).unwrap()); // Most likely 1
+//! ``` 
+//!
 //! ## Discrete time
 //! 
 //! Construction of a random walk in the integers.
@@ -211,7 +223,7 @@ pub mod tests {
     // generated. This is redundant with vector and correctness tests.
 
     /// Construct a deterministic RNG with the given seed
-    pub fn rng(seed: u64) -> impl rand::RngCore {
+    pub fn rng(seed: u64) -> impl rand::Rng {
         // For tests, we want a statistically good, fast, reproducible RNG.
         // PCG32 will do fine, and will be easy to embed if we ever need to.
         const INC: u64 = 11634580027462260723;

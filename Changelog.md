@@ -6,6 +6,7 @@
   - FiniteMarkovChain from matrices
 - Include ndarray as a dependence
 - Improve documentation
+- Update dependencies
 
 ## 0.2.1
 

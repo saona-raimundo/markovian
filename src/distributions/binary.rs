@@ -1,7 +1,9 @@
-
-use core::marker::PhantomData;
+// Traits
 use rand::Rng;
 use rand_distr::Distribution;
+
+// Structs
+use core::marker::PhantomData;
 
 /// Concrete struct for the function of two Distributions`. 
 /// 

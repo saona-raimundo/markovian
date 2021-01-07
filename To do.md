@@ -1,11 +1,23 @@
 # To do
 
+Update test-case dependency
+
 ## FiniteMarkovChain
 
 - Documentation
   - Examples
-  - Add to the readme, so that crates.io is better presented
-  - Compare with [mkv_chain](https://crates.io/crates/mkv_chain)
+  - Tests
+- Functions
+  - absorbing_states_index(&self) -> Vec<usize>
+  - may_achieve_index(&self, index: usize) -> bool
+  - may_achieve(&self, query: T) -> bool
+  - may_absorb(&self) -> bool
+    - Optimize
+
+## ContFiniteMarkovChain
+
+- The same
+- has_absorbing_state(&self) -> bool
 
 ## Macros
 

@@ -2,11 +2,12 @@
 use crate::{State, StateIterator};
 use core::fmt::Debug;
 use rand::Rng;
-use rand_distr::{Float, weighted::alias_method::Weight, Distribution};
+use rand_distr::{weighted_alias::{WeightedAliasIndex, AliasableWeight}, Distribution};
+use num_traits::float::Float;
 
 // Structs
 use crate::errors::InvalidState;
-use rand_distr::{Exp1, Exp, Uniform, weighted::alias_method::WeightedIndex};
+use rand_distr::{Exp1, Exp};
 
 // Functions
 use core::mem;
@@ -17,16 +18,15 @@ use core::mem;
 /// 
 /// Construction cost: O(n), n: size of the state space.
 /// Sample cost: O(1).
-#[derive(Debug, Clone)]
+// #[derive(Debug, Clone)]
 pub struct ContFiniteMarkovChain<T, W, R>
 where
-    W: Float + Weight,
+    W: Float + AliasableWeight,
     Exp1: Distribution<W>,
-    Uniform<W>: Debug + Clone,
     R: Rng,
 {
     state_index: usize,
-    transition_matrix: Vec<WeightedIndex<W>>,
+    transition_matrix: Vec<WeightedAliasIndex<W>>,
     transiton_clock: Vec<W>,
     state_space: Vec<T>,
     rng: R,
@@ -34,9 +34,8 @@ where
 
 impl<T, W, R> ContFiniteMarkovChain<T, W, R>
 where
-    W: Float + Weight + std::iter::Sum<W>,
+    W: Float + AliasableWeight,
     Exp1: Distribution<W>,
-    Uniform<W>: Debug + Clone,
     R: Rng,
 {
     #[inline]
@@ -46,9 +45,9 @@ where
         state_space: Vec<T>,
         rng: R,
     ) -> Self {
-        let transition_matrix: Vec<WeightedIndex<W>> = transition_weights.clone()
+        let transition_matrix: Vec<WeightedAliasIndex<W>> = transition_weights.clone()
             .into_iter()
-            .map(|weights| WeightedIndex::new(weights).unwrap())
+            .map(|weights| WeightedAliasIndex::new(weights).unwrap())
             .collect();
         let transiton_clock: Vec<W> = transition_weights.into_iter()
             .map(|weights| weights.into_iter().sum::<W>())
@@ -76,9 +75,8 @@ where
 
 impl<T, W, R> State for ContFiniteMarkovChain<T, W, R>
 where
-    W: Float + Weight,
+    W: Float + AliasableWeight,
     Exp1: Distribution<W>,
-    Uniform<W>: Debug + Clone,
     T: Debug + PartialEq + Clone,
     R: Rng,
 {
@@ -111,9 +109,8 @@ where
 
 impl<T, W, R> Iterator for ContFiniteMarkovChain<T, W, R>
 where
-    W: Float + Weight,
+    W: Float + AliasableWeight,
     Exp1: Distribution<W>,
-    Uniform<W>: Debug + Clone,
     T: Debug + PartialEq + Clone,
     R: Rng,
 {
@@ -129,23 +126,21 @@ where
 
 impl<T, W, R> StateIterator for ContFiniteMarkovChain<T, W, R>
 where
-    W: Float + Weight,
+    W: Float + AliasableWeight,
     Exp1: Distribution<W>,
-    Uniform<W>: Debug + Clone,
     T: Debug + PartialEq + Clone,
     R: Rng,
 {
     #[inline]
     fn state_as_item(&self) -> Option<<Self as std::iter::Iterator>::Item> {
-        self.state().cloned().map(|x| (W::from(0.0), x))
+        self.state().cloned().map(|x| (W::zero(), x))
     }
 }
 
 impl<T, W, R> Distribution<(W, T)> for ContFiniteMarkovChain<T, W, R>
 where
-    W: Float + Weight,
+    W: Float + AliasableWeight,
     Exp1: Distribution<W>,
-    Uniform<W>: Debug + Clone,
     T: Debug + PartialEq + Clone,
     R: Rng,
 {
