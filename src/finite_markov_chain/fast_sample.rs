@@ -6,6 +6,7 @@ use rand_distr::{weighted_alias::{WeightedAliasIndex, AliasableWeight}, Uniform,
 
 // Structs
 use crate::errors::InvalidState;
+use petgraph::graph::DiGraph;
 
 // Functions
 use core::mem;
@@ -14,8 +15,9 @@ use core::mem;
 /// 
 /// # Costs
 /// 
-/// Construction cost: O(n), n: size of the state space.
-/// Sample cost: O(1).
+/// **Construction**: O(n^2), where n is the size of the state space.
+/// 
+/// **Sample**: O(1).
 ///
 /// # Warning
 ///
@@ -64,6 +66,8 @@ where
     /// # Panics
     ///
     /// This method panics if: 
+    /// - (In debug mode only) The`state_space` vactor has repeated elements
+    /// (defined by PartialEq).
     /// - (In debug mode only) The dimensions of `state_space` and `transition_matrix` do not match.
     /// - Any vector of `transition_matrix` has more than u32::MAX columns.
     /// - For any entry w of any vector of `transition_matrix` v: 
@@ -76,10 +80,32 @@ where
         state_space: Vec<T>,
         rng: R,
     ) -> Self {
-        debug_assert_eq!(transition_matrix.len(), state_space.len());
         let transition_matrix_variables = transition_matrix.clone().into_iter()
         	.map(|v| WeightedAliasIndex::new(v).unwrap())
         	.collect();
+
+        FiniteMarkovChain::new_raw(
+            state_index,
+            transition_matrix,
+            transition_matrix_variables,
+            state_space,
+            rng
+        )
+    }
+
+    #[inline]
+    fn new_raw(
+        state_index: usize,
+        transition_matrix: Vec<Vec<W>>,
+        transition_matrix_variables: Vec<WeightedAliasIndex<W>>,     
+        state_space: Vec<T>,
+        rng: R,
+    ) -> Self {
+        let state_space_len_true: usize = state_space.iter()
+            .map(|x| state_space.iter().filter(|&y| x == y).count())
+            .sum();
+        debug_assert_eq!(state_space_len_true, state_space.len());
+        debug_assert_eq!(transition_matrix.len(), state_space.len());
         FiniteMarkovChain {
             state_index,
             transition_matrix,
@@ -89,39 +115,120 @@ where
         }
     }
 
+    /// Samples a possible index for the next state.
+    ///
+    /// # Remarks
+    ///
+    /// Although the state the Markov Chain does not change, 
+    /// its random number generator does. That is why this method needs `&mut self`.
+    ///
+    /// # Examples
+    ///
+    /// From the current state, the next index has equal probability of being `0` or `1`.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mut mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+    /// println!("The next index could be {}", mc.sample_index());  // 50% 0 and 50% 1.
+    /// ```
     #[inline]
     pub fn sample_index(&mut self) -> usize {
         self.transition_matrix_variables[self.state_index].sample(&mut self.rng)
     }
 
+    /// Returns the state space of the Markov Chain.
+    ///
+    /// The state space is the collection of all values the chain might ever take,
+    /// even if they are not recheable from the current state.
+    ///
+    /// # Examples
+    ///
+    /// The state space can be more than one state, 
+    /// even if the Markov Chain is already absorbed. 
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mc = FiniteMarkovChain::from((1, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+    /// assert_eq!(mc.state_space(), &vec![0, 1]);
+    /// ```
     #[inline]
     pub fn state_space(&self) -> &Vec<T> {
         &self.state_space
     }    
 
+    /// Returns the size of the state space.
+    ///
+    /// The state space is the collection of all values the chain might ever take,
+    /// even if they are not recheable from the current state.
+    ///
+    /// # Examples
+    ///
+    /// A Markov Chain with two states. 
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::FiniteMarkovChain;
+    /// let mc = FiniteMarkovChain::from((1, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+    /// assert_eq!(mc.nstates(), 2);
+    /// ```
+    #[inline]
+    pub fn nstates(&self) -> usize {
+        self.state_space().len()
+    }   
+
+    /// Changes the state space of the Markov Chain.
+    ///
+    /// The state space is the collection of all values the chain might ever take,
+    /// even if they are not recheable from the current state.
+    ///
+    /// # Panics
+    ///
+    /// In debug mode, if `new_state_space` is not as long as the current state space.  
+    ///
+    /// # Examples
+    ///
+    /// Changing from numbers to letters.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mc = FiniteMarkovChain::from((1, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+    /// assert_eq!(mc.state(), Some(&1));
+    /// let mc = mc.set_state_space(vec!['a', 'b']);
+    /// assert_eq!(mc.state(), Some(&'b'));
+    /// ```
     #[inline]
     pub fn set_state_space<U>(self, new_state_space: Vec<U>) -> FiniteMarkovChain<U, W, R> 
     where
     	U: Debug + PartialEq + Clone,
     {
-        FiniteMarkovChain{ 
-		    state_index: self.state_index,
-		    transition_matrix: self.transition_matrix,
-		    transition_matrix_variables: self.transition_matrix_variables,
-		    state_space: new_state_space,
-		    rng: self.rng,
-        }
+        FiniteMarkovChain::new_raw( 
+		    self.state_index,
+		    self.transition_matrix,
+		    self.transition_matrix_variables,
+		    new_state_space,
+		    self.rng,
+        )
     }
 
     /// Returns all absorbing state, if any.
     ///
     /// An absorbing state is a state such that, if the process starts there, 
     /// it will allways be there, i.e. the probability of moving to itself is one.
+    ///
+    /// # Examples
+    ///
+    /// There is one absorbing state: state `b`.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()))
+    ///     .set_state_space(vec!['a', 'b']);
+    /// assert_eq!(mc.absorbing_states(), vec![&'b']);
+    /// ```
     #[inline]
-    pub fn absorbing_states(&self) -> Vec<T> {
-    	self.absorbing_states_index()
+    pub fn absorbing_states(&self) -> Vec<&T> {
+    	self.absorbing_states_indexes()
     		.iter()
-    		.map(|&i| self.state_space()[i].clone())
+    		.map(|&i| &self.state_space()[i])
     		.collect()
     }
 
@@ -129,23 +236,92 @@ where
     ///
     /// An absorbing state is a state such that, if the process starts there, 
     /// it will allways be there, i.e. the probability of moving to itself is one.
+    ///
+    /// # Examples
+    ///
+    /// There is one absorbing state: state `b`, which has index `1`.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()))
+    ///     .set_state_space(vec!['a', 'b']);
+    /// assert_eq!(mc.absorbing_states_indexes(), vec![1]);
+    /// ```
     #[inline]
     pub fn absorbing_states_indexes(&self) -> Vec<usize> {
-    	todo!()
+        let transition_matrix = &self.transition_matrix;
+    	(0..self.state_space.len())
+            .filter(|&i| {
+                let quantities_check = transition_matrix[i].iter()
+                    .enumerate()
+                    .map(|(j, w)| {
+                        if j == i {
+                            w > &W::ZERO
+                        } else {
+                            w == &W::ZERO
+                        }
+                    })
+                    .all(|b| b);
+                let existence_check = transition_matrix[i].len() > i;
+                quantities_check && existence_check
+            })
+            .collect()
+
     }
 
     /// Returns `true` if the Markov Chain may reach the state indexed by `query`, 
     /// from the current state.
+    ///
+    /// # Examples
+    ///
+    /// Checking the possibility of achieving a state from different initial states.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mut mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+    /// assert!(mc.may_achieve_index(0));
+    /// assert!(mc.may_achieve_index(1));
+    /// mc.set_state(1);
+    /// assert!(!mc.may_achieve_index(0));
+    /// assert!(mc.may_achieve_index(1));
+    /// ```
     #[inline]
     pub fn may_achieve_index(&self, query: usize) -> bool {
-    	todo!()
+    	let (graph, node) = self.clone().into();
+        let mut bfs = petgraph::visit::Bfs::new(&graph, node);
+        while let Some(other_node) = bfs.next(&graph) {
+            if other_node.index() == query {
+                return true
+            } 
+        }
+        false
     }
 
     /// Returns `true` if the Markov Chain may reach the state `query`, 
     /// from the current state.
+    ///
+    /// # Examples
+    ///
+    /// Checking the possibility of achieving a state from different initial states.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mut mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()))
+    ///     .set_state_space(vec!['x', 'y']);
+    /// assert!(mc.may_achieve('x').unwrap());
+    /// assert!(mc.may_achieve('y').unwrap());
+    /// mc.set_state('y');
+    /// assert!(!mc.may_achieve('x').unwrap());
+    /// assert!(mc.may_achieve('y').unwrap());
+    /// ```
     #[inline]
-    pub fn may_achieve(&self, query: T) -> bool {
-    	todo!()
+    pub fn may_achieve(&self, query: T) -> Result<bool, InvalidState<T>> {
+        match self.state_space.iter().position(|s| *s == query) {
+            Some(state_index) => {
+                Ok(self.may_achieve_index(state_index))
+            },
+            None => Err(InvalidState::new(query)),
+        }
     }
 
     /// Returns `true` if the Markov Chain contains a recheable absorbing state, 
@@ -154,13 +330,27 @@ where
     /// An absorbing state is a state such that, if the process starts there, 
     /// it will allways be there, i.e. the probability of moving to itself is one.
     /// A reacheable state is a state that can be reached with positive probability.
+    ///
+    /// # Examples
+    ///
+    /// Checking the possibility of achieving a state from different initial states.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// let mut mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+    /// assert!(mc.may_absorb());
+    /// ```    
     #[inline]
     pub fn may_absorb(&self) -> bool {
-    	self.absorbing_states_indexes()
-    		.iter()
-    		.map(|query| self.may_achieve_index(*query))
-    		.any(|b| b)
-
+        let set: std::collections::HashSet<_> = self.absorbing_states_indexes().into_iter().collect();
+        let (graph, node) = self.clone().into();
+        let mut bfs = petgraph::visit::Bfs::new(&graph, node);
+        while let Some(other_node) = bfs.next(&graph) {
+            if set.contains(&other_node.index()) {
+                return true
+            } 
+        }
+        false
     }
 }
 
@@ -328,6 +518,46 @@ where
     }
 }
 
+impl<T, W, R> Into<(DiGraph<T, W>, petgraph::graph::NodeIndex)> for FiniteMarkovChain<T, W, R>
+where
+    W: AliasableWeight + Debug + Clone,
+    Uniform<W>: Debug + Clone,
+    T: Debug + PartialEq + Clone,
+    R: Rng + Debug + Clone,
+{
+    /// Performs the conversion.
+    ///
+    /// # Examples
+    ///
+    /// An absorbing Markov Chain with one transient state and one absorbing state.
+    /// ```
+    /// # use ndarray::array;
+    /// # use markovian::{FiniteMarkovChain, State};
+    /// # use petgraph::graph::DiGraph;
+    /// let mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+    /// let (graph, node) = mc.into();
+    /// assert_eq!(graph[node], 0);
+    /// assert_eq!(graph.neighbors(node).count(), 2);
+    /// assert_eq!(graph.edge_count(), 3);
+    /// assert_eq!(graph.node_count(), 2);
+    /// ``` 
+    fn into(self) -> (DiGraph<T, W>, petgraph::graph::NodeIndex) { 
+        let mut graph = DiGraph::<T, W>::new();
+        let vertices: Vec<_> = self.state_space.iter()
+            .map(|state| graph.add_node(state.clone()))
+            .collect();
+        for i in 0..self.nstates() {
+            for j in 0..self.transition_matrix[i].len() {
+                if self.transition_matrix[i][j] > W::ZERO {
+                    graph.add_edge(vertices[i], vertices[j], self.transition_matrix[i][j]);
+                }
+            }
+        }
+        (graph, petgraph::graph::NodeIndex::new(self.state_index))
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
 
@@ -349,11 +579,11 @@ mod tests {
         FiniteMarkovChain::from((state_index, transition_matrix, state_space, rng));
     }
 
-
     #[test]
     fn change_state() {
         let mut finite_mc = FiniteMarkovChain::new(0, vec![vec![1, 2], vec![2, 1]], vec![10, 20], thread_rng());
         let previous_state = finite_mc.set_state(20).unwrap();
         assert_eq!(Some(10), previous_state);
     }
+
 }

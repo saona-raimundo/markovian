@@ -155,12 +155,30 @@ where
     where
         R2: Rng + ?Sized,
     { 
-        let count = T::one();
+        let mut count = T::one();
         let mut acc = T::zero();
         while count < self.state {
             acc = acc + self.base_distribution.sample(rng);
+            count = count + T::one();
         }
         acc
     }
 }
 
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::prelude::*;
+
+    #[test]
+    fn value_stability() {
+        let expected = vec![2, 1, 2, 1, 1, 2, 4, 3, 2, 1, 1, 0];
+        let init_state: u32 = 1;
+        let density = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
+        let rng = crate::tests::rng(1);
+        let branching_process = BranchingProcess::new(init_state, density, rng);
+        let sample: Vec<u32> = branching_process.take(12).collect();
+        assert_eq!(sample, expected);
+    }
+}

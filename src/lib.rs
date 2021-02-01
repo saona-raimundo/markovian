@@ -11,8 +11,8 @@
 //! An absorbing Markov Chain with one transient state and one absorbing state.
 //! ```
 //! # use ndarray::array;
-//! # use markovian::{FiniteMarkovChain, State};
-//! let mut mc = FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
+//! # use markovian::State;
+//! let mut mc = markovian::FiniteMarkovChain::from((0, array![[0.5, 0.5], [0.0, 1.0]], rand::thread_rng()));
 //! assert_eq!(mc.state(), Some(&0));
 //! assert_eq!(mc.state_space(), &vec![0, 1]);
 //! println!("At time {}, the state is {}", 1_000, mc.nth(1_000).unwrap()); // Most likely 1

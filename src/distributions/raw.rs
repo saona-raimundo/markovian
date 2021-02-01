@@ -70,7 +70,7 @@ where
         for (prob, state) in self.iter.clone() {
             debug_assert!(P::zero() <= prob, "Probabilities can not be negative. Tried to use {:?}", prob);
             debug_assert!(f64::from(P::one()) >= acc, "Probabilities can not be more than one. Tried to use {:?}", acc);
-        	acc = acc + f64::from(prob);
+        	acc += f64::from(prob);
             if acc >= cum_goal {
                 return state;
             }

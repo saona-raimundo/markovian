@@ -25,6 +25,7 @@ rand_distr = "0.4"
 num-traits = "0.2"
 thiserror = "1.0"
 ndarray = "0.13.1"
+petgraph = "0.5.1"
 
 
 [dev-dependencies]

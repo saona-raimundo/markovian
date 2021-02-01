@@ -1,18 +1,28 @@
 # To do
 
-Update test-case dependency
+Update test-case dependency. Check out [here](https://github.com/frondeus/test-case/issues/62).
+
+Take out all `debug_assert!`s
+
+Re-factor to be only stochastic processes and not sub-stochastic ones.
 
 ## FiniteMarkovChain
 
-- Documentation
-  - Examples
-  - Tests
-- Functions
-  - absorbing_states_index(&self) -> Vec<usize>
-  - may_achieve_index(&self, index: usize) -> bool
-  - may_achieve(&self, query: T) -> bool
-  - may_absorb(&self) -> bool
-    - Optimize
+- Construction
+  - Checks of state_space!
+    - What is the condition you want
+    - state_space must be different elements
+  - set_state_space
+    - state_space must be different elements
+  - From Vec<T>
+    - From a sample, 
+      - Consider the initial state
+      - Discover the state space
+      - Count each transition
+      - Construct the chain 
+      - Add to lib module documentation
+- Move from panicking to errors
+  - Create errors
 
 ## ContFiniteMarkovChain
 
@@ -28,9 +38,20 @@ Update test-case dependency
 - **Modules organization:** different algorithms for simulation
   - Exact
   - Fast
+    - Sample speed
   - Accurate
-- Continuous time processes by epsilon-strong simulation
-  - Brownian motion
+  - epsilon-strong
+    - Brownian motion
+
+## Jump processes
+
+In a few cases, the marginal distributions of the increments have a simple form such as a **gamma distribution**, a **stable distribution**, or an **inverse Gaussian distribution** so that special methods for such distributions allow to generate discrete skeletons.  
+
+### Possion process
+
+### Levy process
+
+
 
 ## Abstract probabilities
 
@@ -50,8 +71,10 @@ Struct P<T>: and from methods for different T: Copy + Clone + Debug + PartialOrd
 
   - More general than closed01
   - Checked initialization in debug mode (use assert_debug!)
-
-  - Implement any trait we want, e.g. [num_traits](https://docs.rs/num-traits/0.2.12/num_traits/index.html) and some [core::ops](https://doc.rust-lang.org/nightly/core/ops/index.html).
+- Implement any trait we want, e.g. [num_traits](https://docs.rs/num-traits/0.2.12/num_traits/index.html) and some [core::ops](https://doc.rust-lang.org/nightly/core/ops/index.html).
+  - Accept unums or posits, e.g. [softposit](https://crates.io/crates/softposit) (best implementation of the best rivel to floating point!)
+    - [Visualization](https://cse512-19s.github.io/FP-Well-Rounded/)
+    - [Paper](http://www.johngustafson.net/pdfs/BeatingFloatingPoint.pdf)
 
 #### Rejected
 

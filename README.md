@@ -29,12 +29,16 @@ Your contribution is highly appreciated. Do not hesitate to open an issue or a p
 
 ## Statistics
 
-[bio::stats](https://crates.io/crates/bio) - Mathematical and statistical tools for bioinformatics, including Hidden Markov Chains.
+Crates that serve for statistics (estimation, model fitting or prediction):
 
-[statrs](https://crates.io/crates/statrs) - Statistical utilities for Rust scientific computing.
+- [bio::stats](https://crates.io/crates/bio) - Mathematical and statistical tools for bioinformatics, including Hidden Markov Chains.
 
-[mkv_chain](https://crates.io/crates/mkv_chain) - Finite state Markov Chains
+- [statrs](https://crates.io/crates/statrs) - Statistical utilities for Rust scientific computing.
+
+- [mkv_chain](https://crates.io/crates/mkv_chain) - Finite state Markov Chains
 
 ## Simulation
 
 [rand](https://crates.io/crates/rand) - Random number generation.
+
+[noise](https://crates.io/crates/noise) - A procedural noise generation library for Rust.
