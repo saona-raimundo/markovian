@@ -24,11 +24,11 @@ use rand_distr::Distribution;
 /// assert_eq!(value, dis.sample(&mut thread_rng()));
 /// ```
 /// 
-/// # Correctedness
+/// # Panics
 /// 
-/// Bounds on probabilities are checked only in debug mode using `debug_assert`.
-/// This way, there are guarantees when developing code that probabilities
-/// have valid values, but during a release run there is no overhead!
+/// Panics if probabilities: 
+/// - Are strictly less than zero. 
+/// - Sum up strictly more than one.
 /// 
 /// # Costs
 /// 
@@ -66,10 +66,11 @@ where
         let cum_goal: f64 = rng.gen(); // NOT CORRECT
 
         let mut acc: f64 = 0.0;
+        let one = f64::from(P::one());
 
         for (prob, state) in self.iter.clone() {
-            debug_assert!(P::zero() <= prob, "Probabilities can not be negative. Tried to use {:?}", prob);
-            debug_assert!(f64::from(P::one()) >= acc, "Probabilities can not be more than one. Tried to use {:?}", acc);
+            assert!(P::zero() <= prob, "Probabilities can not be negative. Tried to use {:?}", prob);
+            assert!(one >= acc, "Probabilities can not be more than one. Tried to use {:?}", acc);
         	acc += f64::from(prob);
             if acc >= cum_goal {
                 return state;

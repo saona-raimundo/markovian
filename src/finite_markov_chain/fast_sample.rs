@@ -66,9 +66,9 @@ where
     /// # Panics
     ///
     /// This method panics if: 
-    /// - (In debug mode only) The`state_space` vactor has repeated elements
+    /// - The`state_space` vector has repeated elements
     /// (defined by PartialEq).
-    /// - (In debug mode only) The dimensions of `state_space` and `transition_matrix` do not match.
+    /// - The dimensions of `state_space` and `transition_matrix` do not match.
     /// - Any vector of `transition_matrix` has more than u32::MAX columns.
     /// - For any entry w of any vector of `transition_matrix` v: 
     /// w < 0 or w > max where max = W::MAX / v.len().
@@ -104,8 +104,8 @@ where
         let state_space_len_true: usize = state_space.iter()
             .map(|x| state_space.iter().filter(|&y| x == y).count())
             .sum();
-        debug_assert_eq!(state_space_len_true, state_space.len());
-        debug_assert_eq!(transition_matrix.len(), state_space.len());
+        assert_eq!(state_space_len_true, state_space.len());
+        assert_eq!(transition_matrix.len(), state_space.len());
         FiniteMarkovChain {
             state_index,
             transition_matrix,

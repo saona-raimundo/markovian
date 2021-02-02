@@ -1,9 +1,5 @@
 # To do
 
-Update test-case dependency. Check out [here](https://github.com/frondeus/test-case/issues/62).
-
-Take out all `debug_assert!`s
-
 Re-factor to be only stochastic processes and not sub-stochastic ones.
 
 ## Derive Macros
