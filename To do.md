@@ -5,7 +5,11 @@ Re-factor to be only stochastic processes and not sub-stochastic ones.
 ## Derive Macros
 
 - State
+  - Needs to read where_clauses to write them again in the implementation of State trait
+  - Needs to be given (input) the type of Item (...which is always `T`). 
+  - Nice error message!
 - StateIterator
+  - ??
 
 Once implemented, clean the code for all the structs. 
 
@@ -50,9 +54,8 @@ Once implemented, clean the code for all the structs.
 
 In a few cases, the marginal distributions of the increments have a simple form such as a **gamma distribution**, a **stable distribution**, or an **inverse Gaussian distribution** so that special methods for such distributions allow to generate discrete skeletons.  
 
-### Possion process
-
-### Levy process
+- [x] Possion process
+- [ ] Levy process
 
 
 
