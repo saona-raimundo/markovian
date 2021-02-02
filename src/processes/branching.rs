@@ -52,7 +52,7 @@ where
     /// let init_state: u32 = 1;
     /// let density = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
     /// let rng = thread_rng();
-    /// let mut branching_process = markovian::Branching::new(init_state, density, rng);
+    /// let mut branching_process = Branching::new(init_state, density, rng);
     /// ``` 
     ///
     #[inline]
@@ -112,7 +112,7 @@ where
     /// let init_state: u32 = 1;
     /// let density = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
     /// let rng = thread_rng();
-    /// let mut branching_process = markovian::Branching::new(init_state, density, rng);
+    /// let mut branching_process = Branching::new(init_state, density, rng);
     ///
     /// // The next state is 0, 1 or 2. 
     /// let new_state = branching_process.next();

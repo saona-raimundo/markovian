@@ -1,10 +1,6 @@
 use crate::State;
 use core::iter::Chain;
 
-
-
-
-
 /// Iterator with an internal state. 
 /// 
 /// Internals states can be thought as the "initial" element of an iterator, see [trajectory].

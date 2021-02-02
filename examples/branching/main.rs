@@ -5,7 +5,7 @@
 
 use rand::prelude::*;
 use markovian::prelude::*;
-use markovian::Branching;
+use markovian::processes::Branching;
 use preexplorer::prelude::*;
 use rayon::prelude::*;
 

@@ -6,6 +6,13 @@ Take out all `debug_assert!`s
 
 Re-factor to be only stochastic processes and not sub-stochastic ones.
 
+## Derive Macros
+
+- State
+- StateIterator
+
+Once implemented, clean the code for all the structs. 
+
 ## FiniteMarkovChain
 
 - Construction

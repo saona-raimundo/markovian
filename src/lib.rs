@@ -41,7 +41,7 @@
 //! let init_state: u32 = 1;
 //! let base_distribution = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
 //! let rng = thread_rng();
-//! let mut branching_process = markovian::Branching::new(init_state, base_distribution, rng);
+//! let mut branching_process = Branching::new(init_state, base_distribution, rng);
 //! ``` 
 //! ## Continuous time
 //! 
@@ -171,14 +171,14 @@
 //! assert_eq!(mc.state().unwrap().len(), 2);
 //! ```
 //! 
-pub use self::processes::{Branching};
 pub use self::continuous_finite_markov_chain::ContFiniteMarkovChain;
 pub use self::finite_markov_chain::FiniteMarkovChain;
 pub use self::markov_chain::MarkovChain;
 pub use self::timed_markov_chain::TimedMarkovChain;
 pub use self::traits::{State, StateIterator, Transition};
 
-mod processes;
+/// Generating random trajectories from stochactic processes
+pub mod processes;
 mod continuous_finite_markov_chain;
 mod finite_markov_chain;
 mod markov_chain;
@@ -196,6 +196,7 @@ pub mod prelude {
     pub use crate::traits::*;
     pub use crate::{raw_dist};
     pub use crate::distributions::Raw;
+    pub use crate::processes::*;
 }
 
 
