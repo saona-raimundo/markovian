@@ -42,3 +42,7 @@ Crates that serve for statistics (estimation, model fitting or prediction):
 [rand](https://crates.io/crates/rand) - Random number generation.
 
 [noise](https://crates.io/crates/noise) - A procedural noise generation library for Rust.
+
+[rv](https://crates.io/crates/rv) - Random variables (RV) for rust.
+
+[sim](https://crates.io/crates/sim) - "Sim" or "SimRS" is a discrete event simulation package that facilitates Rust- and npm-based simulation products and projects.
