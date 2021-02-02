@@ -23,7 +23,7 @@ use core::mem;
 /// offsprings an individual has. 
 /// The resulting process is a Markov Chain in NN.
 #[derive(Debug, Clone)]
-pub struct BranchingProcess<T, D, R> 
+pub struct Branching<T, D, R> 
 where
     T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
@@ -34,7 +34,7 @@ where
     rng: R,
 }
 
-impl<T, D, R> BranchingProcess<T, D, R>
+impl<T, D, R> Branching<T, D, R>
 where
     T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
@@ -52,12 +52,12 @@ where
     /// let init_state: u32 = 1;
     /// let density = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
     /// let rng = thread_rng();
-    /// let mut branching_process = markovian::BranchingProcess::new(init_state, density, rng);
+    /// let mut branching_process = markovian::Branching::new(init_state, density, rng);
     /// ``` 
     ///
     #[inline]
     pub fn new(state: T, base_distribution: D, rng: R) -> Self {
-        BranchingProcess {
+        Branching {
             state,
             base_distribution,
             rng,
@@ -65,7 +65,7 @@ where
     }
 }
 
-impl<T, D, R> State for BranchingProcess<T, D, R>
+impl<T, D, R> State for Branching<T, D, R>
 where
     T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
@@ -93,7 +93,7 @@ where
     }
 }
 
-impl<T, D, R> Iterator for BranchingProcess<T, D, R>
+impl<T, D, R> Iterator for Branching<T, D, R>
 where
     T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
@@ -112,7 +112,7 @@ where
     /// let init_state: u32 = 1;
     /// let density = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
     /// let rng = thread_rng();
-    /// let mut branching_process = markovian::BranchingProcess::new(init_state, density, rng);
+    /// let mut branching_process = markovian::Branching::new(init_state, density, rng);
     ///
     /// // The next state is 0, 1 or 2. 
     /// let new_state = branching_process.next();
@@ -131,7 +131,7 @@ where
     }
 }
 
-impl<T, D, R> StateIterator for BranchingProcess<T, D, R>
+impl<T, D, R> StateIterator for Branching<T, D, R>
 where
     T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
@@ -143,7 +143,7 @@ where
     }
 }
 
-impl<T, D, R> Distribution<T> for BranchingProcess<T, D, R>
+impl<T, D, R> Distribution<T> for Branching<T, D, R>
 where
     T: Debug + PartialEq + Clone + One + Zero + PartialOrd + Unsigned,
     D: Distribution<T>,
@@ -177,7 +177,7 @@ mod tests {
         let init_state: u32 = 1;
         let density = raw_dist![(0.3, 0), (0.4, 1), (0.3, 2)];
         let rng = crate::tests::rng(1);
-        let branching_process = BranchingProcess::new(init_state, density, rng);
+        let branching_process = Branching::new(init_state, density, rng);
         let sample: Vec<u32> = branching_process.take(12).collect();
         assert_eq!(sample, expected);
     }

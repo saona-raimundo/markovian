@@ -5,7 +5,7 @@
 
 use rand::prelude::*;
 use markovian::prelude::*;
-use markovian::BranchingProcess;
+use markovian::Branching;
 use preexplorer::prelude::*;
 use rayon::prelude::*;
 
@@ -61,7 +61,7 @@ fn sample_population(
                 (birth_prob, 2),
                 (1.0 - birth_prob - death_prob, 1)
             ];
-            let mut branching_process = BranchingProcess::new(init_state, density, thread_rng());
+            let mut branching_process = Branching::new(init_state, density, thread_rng());
 
             branching_process.nth(iterations).unwrap()
         })
