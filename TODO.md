@@ -71,6 +71,16 @@ Requirements:
 
 ### Best
 
+`Unit` wrapper from `nalgebra`!
+
+https://docs.rs/nalgebra/0.26.2/nalgebra/base/struct.Unit.html
+
+Idea: `Distribution<[T; N]>` wrapper for vectors, with constant generics!
+
+- Implementation: prob-num crate!
+
+### Good
+
 Struct P<T>: and from methods for different T: Copy + Clone + Debug + PartialOrd + Num
 
 - Pros
