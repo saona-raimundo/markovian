@@ -48,3 +48,8 @@ Crates that serve for statistics (estimation, model fitting or prediction):
 - [sim](https://crates.io/crates/sim) - "Sim" or "SimRS" is a discrete event simulation package that facilitates Rust- and npm-based simulation products and projects.
 
 - [randomwalk](https://crates.io/crates/randomwalk) - Build glorious random walks.
+
+# For the reader
+
+Has this project been useful to you? How? :)
+Let me know through a github issue!
