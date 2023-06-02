@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/crates/l/markovian)](https://github.com/saona-raimundo/markovian)
 [![Docs](https://docs.rs/markovian/badge.svg)](https://docs.rs/markovian/)
 [![Crate](https://img.shields.io/crates/v/markovian.svg)](https://crates.io/crates/markovian)
+[![dependency status](https://deps.rs/crate/markovian/latest/status.svg)](https://deps.rs/crate/markovian)
 
 Simulation of [Stochastic processes](https://en.wikipedia.org/wiki/Stochastic_process).
 
